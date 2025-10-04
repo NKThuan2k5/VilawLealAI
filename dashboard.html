@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Quản lý - ViLaw</title>
+    <meta name="description" content="Dashboard quản lý hệ thống ViLaw. Thống kê, báo cáo và quản lý người dùng.">
+    
+    <!-- CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #76BA53;
+            --accent: #76819B;
+            --dark: #19253F;
+            --muted: #9B9CAA;
+            --primary-rgba-08: rgba(118, 186, 83, 0.08);
+            --accent-rgba-08: rgba(118, 129, 155, 0.08);
+            --primary-rgba-18: rgba(118, 186, 83, 0.18);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #EFF2F0;
+            color: #19253F;
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--primary-rgba-18);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.5);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #68a547;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+        }
+
+        .dashboard-card.large {
+            grid-column: span 2;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .card-action {
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .card-action:hover {
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive {
+            color: #10b981;
+        }
+
+        .stat-change.negative {
+            color: #ef4444;
+        }
+
+        .stat-change.neutral {
+            color: #6b7280;
+        }
+
+        /* Charts */
+        .chart-container {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #f3f4f6 25%, transparent 25%), 
+                        linear-gradient(-45deg, #f3f4f6 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #f3f4f6 75%), 
+                        linear-gradient(-45deg, transparent 75%, #f3f4f6 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .table td {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .table tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.inactive {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-badge.pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        /* Activity Feed */
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.user {
+            background-color: var(--primary-rgba-08);
+            color: var(--primary);
+        }
+
+        .activity-icon.system {
+            background-color: var(--accent-rgba-08);
+            color: var(--accent);
+        }
+
+        .activity-icon.warning {
+            background-color: #fef3c7;
+            color: #f59e0b;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 500;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-description {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .activity-time {
+            color: #9ca3af;
+            font-size: 0.75rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-action {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .quick-action:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-action-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .quick-action-content {
+            flex: 1;
+        }
+
+        .quick-action-title {
+            font-weight: 500;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+
+        .quick-action-description {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-card.large {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <img src="assets/logo.jpg" alt="ViLaw">
+                    </div>
+                </a>
+
+                <nav class="nav">
+                    <a href="legal.html" class="nav-link">Văn bản</a>
+                    <a href="chat.html" class="nav-link">Chat AI</a>
+                    <a href="documents.html" class="nav-link">Soạn thảo</a>
+                    <a href="contract.html" class="nav-link">Hợp đồng</a>
+                    <a href="dashboard.html" class="nav-link active">Admin</a>
+                </nav>
+
+                <div>
+                    <a href="loginuser.html" class="btn btn-primary">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        Đăng nhập
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Dashboard Quản lý</h1>
+                <p class="page-subtitle">
+                    Thống kê và quản lý hệ thống ViLaw
+                </p>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Stats Cards -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tổng người dùng</h3>
+                        <i data-lucide="users" class="w-5 h-5 text-primary"></i>
+                    </div>
+                    <div class="stat-value" id="totalUsers">12,543</div>
+                    <div class="stat-label">Người dùng đăng ký</div>
+                    <div class="stat-change positive">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        +12.5% so với tháng trước
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Cuộc trò chuyện</h3>
+                        <i data-lucide="message-square" class="w-5 h-5 text-accent"></i>
+                    </div>
+                    <div class="stat-value" id="totalChats">8,432</div>
+                    <div class="stat-label">Cuộc trò chuyện hôm nay</div>
+                    <div class="stat-change positive">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        +8.2% so với hôm qua
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Văn bản đã tạo</h3>
+                        <i data-lucide="file-text" class="w-5 h-5 text-green-500"></i>
+                    </div>
+                    <div class="stat-value" id="totalDocuments">3,267</div>
+                    <div class="stat-label">Văn bản trong tháng</div>
+                    <div class="stat-change positive">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        +15.3% so với tháng trước
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Hợp đồng phân tích</h3>
+                        <i data-lucide="file-check" class="w-5 h-5 text-blue-500"></i>
+                    </div>
+                    <div class="stat-value" id="totalContracts">1,856</div>
+                    <div class="stat-label">Hợp đồng đã phân tích</div>
+                    <div class="stat-change positive">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        +22.1% so với tháng trước
+                    </div>
+                </div>
+
+                <!-- Chart Card -->
+                <div class="dashboard-card large">
+                    <div class="card-header">
+                        <h3 class="card-title">Thống kê sử dụng</h3>
+                        <div class="card-action">
+                            <select style="border: none; background: none; color: #6b7280; font-size: 0.875rem;">
+                                <option>7 ngày qua</option>
+                                <option>30 ngày qua</option>
+                                <option>90 ngày qua</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <div style="text-align: center;">
+                                <i data-lucide="bar-chart-3" class="w-8 h-8 mb-2" style="color: #9ca3af;"></i>
+                                <div>Biểu đồ thống kê</div>
+                                <div style="font-size: 0.75rem; color: #9ca3af;">Dữ liệu sẽ được hiển thị ở đây</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="dashboard-card large">
+                    <div class="card-header">
+                        <h3 class="card-title">Hoạt động gần đây</h3>
+                        <div class="card-action">
+                            <a href="#" style="color: #6b7280; text-decoration: none; font-size: 0.875rem;">Xem tất cả</a>
+                        </div>
+                    </div>
+                    <div id="recentActivity">
+                        <div class="activity-item">
+                            <div class="activity-icon user">
+                                <i data-lucide="user" class="w-4 h-4"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Người dùng mới đăng ký</div>
+                                <div class="activity-description">Nguyễn Văn A đã đăng ký tài khoản</div>
+                                <div class="activity-time">2 phút trước</div>
+                            </div>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="activity-icon system">
+                                <i data-lucide="message-square" class="w-4 h-4"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Cuộc trò chuyện mới</div>
+                                <div class="activity-description">Người dùng đã bắt đầu cuộc trò chuyện với AI</div>
+                                <div class="activity-time">5 phút trước</div>
+                            </div>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="activity-icon system">
+                                <i data-lucide="file-text" class="w-4 h-4"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Văn bản mới được tạo</div>
+                                <div class="activity-description">Hợp đồng lao động đã được tạo thành công</div>
+                                <div class="activity-time">10 phút trước</div>
+                            </div>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="activity-icon warning">
+                                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Cảnh báo hệ thống</div>
+                                <div class="activity-description">Tải cao trên server, cần theo dõi</div>
+                                <div class="activity-time">15 phút trước</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Management -->
+                <div class="dashboard-card large">
+                    <div class="card-header">
+                        <h3 class="card-title">Quản lý người dùng</h3>
+                        <div class="card-action">
+                            <a href="#" style="color: #6b7280; text-decoration: none; font-size: 0.875rem;">Xem tất cả</a>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Tên người dùng</th>
+                                    <th>Email</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ngày đăng ký</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                                <tr>
+                                    <td>Nguyễn Văn A</td>
+                                    <td>nguyenvana@email.com</td>
+                                    <td><span class="status-badge active">Hoạt động</span></td>
+                                    <td>15/11/2024</td>
+                                </tr>
+                                <tr>
+                                    <td>Trần Thị B</td>
+                                    <td>tranthib@email.com</td>
+                                    <td><span class="status-badge active">Hoạt động</span></td>
+                                    <td>14/11/2024</td>
+                                </tr>
+                                <tr>
+                                    <td>Lê Văn C</td>
+                                    <td>levanc@email.com</td>
+                                    <td><span class="status-badge pending">Chờ xác thực</span></td>
+                                    <td>13/11/2024</td>
+                                </tr>
+                                <tr>
+                                    <td>Phạm Thị D</td>
+                                    <td>phamthid@email.com</td>
+                                    <td><span class="status-badge inactive">Tạm khóa</span></td>
+                                    <td>12/11/2024</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thao tác nhanh</h3>
+                    </div>
+                    <div class="quick-actions">
+                        <a href="#" class="quick-action">
+                            <div class="quick-action-icon">
+                                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                            </div>
+                            <div class="quick-action-content">
+                                <div class="quick-action-title">Thêm người dùng</div>
+                                <div class="quick-action-description">Tạo tài khoản mới</div>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="quick-action">
+                            <div class="quick-action-icon">
+                                <i data-lucide="settings" class="w-4 h-4"></i>
+                            </div>
+                            <div class="quick-action-content">
+                                <div class="quick-action-title">Cài đặt hệ thống</div>
+                                <div class="quick-action-description">Cấu hình hệ thống</div>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="quick-action">
+                            <div class="quick-action-icon">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                            </div>
+                            <div class="quick-action-content">
+                                <div class="quick-action-title">Xuất báo cáo</div>
+                                <div class="quick-action-description">Tải báo cáo thống kê</div>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="quick-action">
+                            <div class="quick-action-icon">
+                                <i data-lucide="bell" class="w-4 h-4"></i>
+                            </div>
+                            <div class="quick-action-content">
+                                <div class="quick-action-title">Thông báo</div>
+                                <div class="quick-action-description">Gửi thông báo</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Dashboard functionality
+        class DashboardApp {
+            constructor() {
+                this.initializeElements();
+                this.bindEvents();
+                this.loadDashboardData();
+                this.startRealTimeUpdates();
+            }
+            
+            initializeElements() {
+                this.totalUsers = document.getElementById('totalUsers');
+                this.totalChats = document.getElementById('totalChats');
+                this.totalDocuments = document.getElementById('totalDocuments');
+                this.totalContracts = document.getElementById('totalContracts');
+                this.recentActivity = document.getElementById('recentActivity');
+                this.userTableBody = document.getElementById('userTableBody');
+            }
+            
+            bindEvents() {
+                // Add event listeners for interactive elements
+                document.addEventListener('click', (e) => {
+                    if (e.target.closest('.quick-action')) {
+                        this.handleQuickAction(e.target.closest('.quick-action'));
+                    }
+                });
+            }
+            
+            loadDashboardData() {
+                // Simulate loading dashboard data
+                this.dashboardData = {
+                    users: 12543,
+                    chats: 8432,
+                    documents: 3267,
+                    contracts: 1856,
+                    activities: [
+                        {
+                            type: 'user',
+                            title: 'Người dùng mới đăng ký',
+                            description: 'Nguyễn Văn A đã đăng ký tài khoản',
+                            time: '2 phút trước'
+                        },
+                        {
+                            type: 'system',
+                            title: 'Cuộc trò chuyện mới',
+                            description: 'Người dùng đã bắt đầu cuộc trò chuyện với AI',
+                            time: '5 phút trước'
+                        },
+                        {
+                            type: 'system',
+                            title: 'Văn bản mới được tạo',
+                            description: 'Hợp đồng lao động đã được tạo thành công',
+                            time: '10 phút trước'
+                        },
+                        {
+                            type: 'warning',
+                            title: 'Cảnh báo hệ thống',
+                            description: 'Tải cao trên server, cần theo dõi',
+                            time: '15 phút trước'
+                        }
+                    ],
+                    users: [
+                        {
+                            name: 'Nguyễn Văn A',
+                            email: 'nguyenvana@email.com',
+                            status: 'active',
+                            joinDate: '15/11/2024'
+                        },
+                        {
+                            name: 'Trần Thị B',
+                            email: 'tranthib@email.com',
+                            status: 'active',
+                            joinDate: '14/11/2024'
+                        },
+                        {
+                            name: 'Lê Văn C',
+                            email: 'levanc@email.com',
+                            status: 'pending',
+                            joinDate: '13/11/2024'
+                        },
+                        {
+                            name: 'Phạm Thị D',
+                            email: 'phamthid@email.com',
+                            status: 'inactive',
+                            joinDate: '12/11/2024'
+                        }
+                    ]
+                };
+                
+                this.updateStats();
+                this.updateActivities();
+                this.updateUsers();
+            }
+            
+            updateStats() {
+                // Animate numbers
+                this.animateNumber(this.totalUsers, this.dashboardData.users);
+                this.animateNumber(this.totalChats, this.dashboardData.chats);
+                this.animateNumber(this.totalDocuments, this.dashboardData.documents);
+                this.animateNumber(this.totalContracts, this.dashboardData.contracts);
+            }
+            
+            animateNumber(element, targetValue) {
+                const startValue = 0;
+                const duration = 2000;
+                const startTime = performance.now();
+                
+                const animate = (currentTime) => {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const currentValue = Math.floor(startValue + (targetValue - startValue) * progress);
+                    
+                    element.textContent = currentValue.toLocaleString();
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    }
+                };
+                
+                requestAnimationFrame(animate);
+            }
+            
+            updateActivities() {
+                this.recentActivity.innerHTML = this.dashboardData.activities.map(activity => `
+                    <div class="activity-item">
+                        <div class="activity-icon ${activity.type}">
+                            <i data-lucide="${this.getActivityIcon(activity.type)}" class="w-4 h-4"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">${activity.title}</div>
+                            <div class="activity-description">${activity.description}</div>
+                            <div class="activity-time">${activity.time}</div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Re-initialize icons
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+            
+            updateUsers() {
+                this.userTableBody.innerHTML = this.dashboardData.users.map(user => `
+                    <tr>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td><span class="status-badge ${user.status}">${this.getStatusText(user.status)}</span></td>
+                        <td>${user.joinDate}</td>
+                    </tr>
+                `).join('');
+            }
+            
+            getActivityIcon(type) {
+                const icons = {
+                    'user': 'user',
+                    'system': 'message-square',
+                    'warning': 'alert-triangle'
+                };
+                return icons[type] || 'info';
+            }
+            
+            getStatusText(status) {
+                const texts = {
+                    'active': 'Hoạt động',
+                    'inactive': 'Tạm khóa',
+                    'pending': 'Chờ xác thực'
+                };
+                return texts[status] || status;
+            }
+            
+            startRealTimeUpdates() {
+                // Simulate real-time updates
+                setInterval(() => {
+                    this.updateRealTimeData();
+                }, 30000); // Update every 30 seconds
+            }
+            
+            updateRealTimeData() {
+                // Simulate random updates
+                const randomChange = Math.floor(Math.random() * 10) - 5;
+                this.dashboardData.chats += randomChange;
+                this.totalChats.textContent = this.dashboardData.chats.toLocaleString();
+                
+                // Add new activity
+                if (Math.random() > 0.7) {
+                    this.addNewActivity();
+                }
+            }
+            
+            addNewActivity() {
+                const activities = [
+                    {
+                        type: 'user',
+                        title: 'Người dùng mới đăng ký',
+                        description: 'Người dùng mới đã đăng ký tài khoản',
+                        time: 'Vừa xong'
+                    },
+                    {
+                        type: 'system',
+                        title: 'Cuộc trò chuyện mới',
+                        description: 'Người dùng đã bắt đầu cuộc trò chuyện với AI',
+                        time: 'Vừa xong'
+                    },
+                    {
+                        type: 'system',
+                        title: 'Văn bản mới được tạo',
+                        description: 'Văn bản pháp lý đã được tạo thành công',
+                        time: 'Vừa xong'
+                    }
+                ];
+                
+                const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+                this.dashboardData.activities.unshift(randomActivity);
+                
+                // Keep only last 4 activities
+                if (this.dashboardData.activities.length > 4) {
+                    this.dashboardData.activities = this.dashboardData.activities.slice(0, 4);
+                }
+                
+                this.updateActivities();
+            }
+            
+            handleQuickAction(action) {
+                const title = action.querySelector('.quick-action-title').textContent;
+                
+                switch (title) {
+                    case 'Thêm người dùng':
+                        alert('Chức năng thêm người dùng sẽ được triển khai');
+                        break;
+                    case 'Cài đặt hệ thống':
+                        alert('Chức năng cài đặt hệ thống sẽ được triển khai');
+                        break;
+                    case 'Xuất báo cáo':
+                        this.exportReport();
+                        break;
+                    case 'Thông báo':
+                        alert('Chức năng gửi thông báo sẽ được triển khai');
+                        break;
+                }
+            }
+            
+            exportReport() {
+                const report = this.generateReport();
+                const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'dashboard_report.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+            
+            generateReport() {
+                let report = `BÁO CÁO DASHBOARD VILAW\n`;
+                report += `================================\n\n`;
+                report += `Thống kê tổng quan:\n`;
+                report += `- Tổng người dùng: ${this.dashboardData.users.toLocaleString()}\n`;
+                report += `- Cuộc trò chuyện: ${this.dashboardData.chats.toLocaleString()}\n`;
+                report += `- Văn bản đã tạo: ${this.dashboardData.documents.toLocaleString()}\n`;
+                report += `- Hợp đồng phân tích: ${this.dashboardData.contracts.toLocaleString()}\n\n`;
+                
+                report += `Hoạt động gần đây:\n`;
+                this.dashboardData.activities.forEach((activity, index) => {
+                    report += `${index + 1}. ${activity.title}\n`;
+                    report += `   ${activity.description}\n`;
+                    report += `   ${activity.time}\n\n`;
+                });
+                
+                report += `Người dùng:\n`;
+                this.dashboardData.users.forEach((user, index) => {
+                    report += `${index + 1}. ${user.name} (${user.email})\n`;
+                    report += `   Trạng thái: ${this.getStatusText(user.status)}\n`;
+                    report += `   Ngày đăng ký: ${user.joinDate}\n\n`;
+                });
+                
+                return report;
+            }
+        }
+        
+        // Initialize dashboard app
+        let dashboardApp;
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            dashboardApp = new DashboardApp();
+        });
+    </script>
+</body>
+</html>

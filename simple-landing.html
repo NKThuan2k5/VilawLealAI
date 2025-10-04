@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViLaw - Nền tảng Hạ tầng Pháp lý Số Toàn Dân</title>
+    <meta name="description" content="Mỗi công dân – Một trợ lý pháp lý AI. Nền tảng pháp lý số toàn diện, tích hợp AI để hỗ trợ công dân, doanh nghiệp và cơ quan nhà nước.">
+    
+    <!-- CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #76BA53;
+            --accent: #76819B;
+            --dark: #19253F;
+            --muted: #9B9CAA;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --info: #3B82F6;
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 500;
+            transition: color 0.2s;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background: rgba(118, 186, 83, 0.1);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            background: rgba(118, 186, 83, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #68a547;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: var(--dark);
+            border: 1px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(118, 186, 83, 0.1);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: #1e293b;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-lg {
+            font-size: 1.125rem;
+            padding: 1rem 2rem;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: #f8fafc;
+            padding: 3rem 0;
+            margin: 3rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #6b7280;
+            font-size: 1.125rem;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(118, 186, 83, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* Test System Section */
+        .test-system {
+            background: linear-gradient(135deg, var(--primary), #68a547);
+            color: white;
+            padding: 4rem 0;
+            margin: 3rem 0;
+        }
+
+        .test-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .test-subtitle {
+            text-align: center;
+            opacity: 0.9;
+            font-size: 1.125rem;
+            margin-bottom: 3rem;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .test-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .test-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .test-card p {
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Packages Section */
+        .packages {
+            padding: 4rem 0;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .package-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .package-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .package-card.popular {
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(118, 186, 83, 0.2);
+        }
+
+        .package-card.popular::before {
+            content: 'Phổ biến';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .package-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .package-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .package-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .package-features li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .package-features li::before {
+            content: '✓';
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1e293b;
+            color: white;
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .footer-section p {
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <div class="logo-icon">V</div>
+                    ViLaw
+                </a>
+
+                <nav class="nav">
+                    <a href="legal.html" class="nav-link">Văn bản</a>
+                    <a href="chat.html" class="nav-link">Chat AI</a>
+                    <a href="enhanced-chat.html" class="nav-link">AI Nâng cao</a>
+                    <a href="documents.html" class="nav-link">Soạn thảo</a>
+                    <a href="contract.html" class="nav-link">Hợp đồng</a>
+                    <a href="dashboard.html" class="nav-link">Admin</a>
+                    <a href="subscription.html" class="nav-link">Gói dịch vụ</a>
+                    <a href="payment.html" class="nav-link">Thanh toán</a>
+                </nav>
+
+                <div>
+                    <a href="loginuser.html" class="btn btn-primary">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        Đăng nhập
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <i data-lucide="rocket" class="w-4 h-4"></i>
+                Nền tảng pháp lý AI đầu tiên tại Việt Nam
+            </div>
+            
+            <h1 class="hero-title">Mỗi công dân – Một trợ lý pháp lý AI</h1>
+            <p class="hero-subtitle">
+                ViLaw là nền tảng hạ tầng pháp lý số toàn dân, kết hợp AI + Voice + Blockchain + Dữ liệu mở. 
+                Giúp mọi người dân tiếp cận pháp luật một cách dễ hiểu, minh bạch và cá nhân hóa.
+            </p>
+            
+            <div class="hero-actions">
+                <a href="enhanced-chat.html" class="btn btn-primary btn-lg">
+                    <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    Trò chuyện với AI
+                </a>
+                <a href="legal.html" class="btn btn-secondary btn-lg">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                    Tìm kiếm luật
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">Văn bản pháp luật</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Hỗ trợ AI</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Miễn phí</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Người dùng</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Tính năng nổi bật</h2>
+            <p class="section-subtitle">
+                Công nghệ AI tiên tiến kết hợp với dữ liệu pháp luật toàn diện
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="brain" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="feature-title">AI Thông minh</h3>
+                    <p class="feature-description">
+                        Trợ lý AI pháp lý được huấn luyện trên hàng nghìn văn bản pháp luật, 
+                        có khả năng hiểu và trả lời các câu hỏi pháp lý phức tạp.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="search" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="feature-title">Tìm kiếm thông minh</h3>
+                    <p class="feature-description">
+                        Tìm kiếm nhanh chóng trong hàng nghìn văn bản pháp luật với công nghệ 
+                        AI semantic search, trả về kết quả chính xác nhất.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="file-text" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="feature-title">Soạn thảo hợp đồng</h3>
+                    <p class="feature-description">
+                        Hỗ trợ soạn thảo các loại hợp đồng phổ biến với mẫu chuẩn, 
+                        điều khoản pháp lý được cập nhật thường xuyên.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="feature-title">Phân tích rủi ro</h3>
+                    <p class="feature-description">
+                        AI phân tích và đánh giá rủi ro pháp lý trong các giao dịch, 
+                        hợp đồng, giúp người dùng đưa ra quyết định đúng đắn.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="mic" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="feature-title">Nhận diện giọng nói</h3>
+                    <p class="feature-description">
+                        Tương tác với AI bằng giọng nói tiếng Việt, hỗ trợ người dùng 
+                        không quen sử dụng bàn phím.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="lock" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="feature-title">Bảo mật cao</h3>
+                    <p class="feature-description">
+                        Dữ liệu được mã hóa end-to-end, tuân thủ các tiêu chuẩn bảo mật 
+                        quốc tế, đảm bảo thông tin cá nhân được bảo vệ.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Test System Section -->
+    <section class="test-system">
+        <div class="container">
+            <h2 class="test-title">Hệ thống kiểm tra AI</h2>
+            <p class="test-subtitle">
+                Trải nghiệm sức mạnh của AI pháp lý với các bài kiểm tra thực tế
+            </p>
+            
+            <div class="test-grid">
+                <div class="test-card">
+                    <h3>Kiểm tra kiến thức pháp luật</h3>
+                    <p>Đánh giá hiểu biết của bạn về các lĩnh vực pháp luật cơ bản</p>
+                    <a href="enhanced-chat.html" class="btn btn-secondary">
+                        Bắt đầu kiểm tra
+                    </a>
+                </div>
+                
+                <div class="test-card">
+                    <h3>Thử nghiệm AI Chat</h3>
+                    <p>Trò chuyện với AI về các vấn đề pháp lý thực tế</p>
+                    <a href="enhanced-chat.html" class="btn btn-secondary">
+                        Chat ngay
+                    </a>
+                </div>
+                
+                <div class="test-card">
+                    <h3>Soạn thảo hợp đồng</h3>
+                    <p>Thực hành soạn thảo các loại hợp đồng phổ biến</p>
+                    <a href="contract.html" class="btn btn-secondary">
+                        Thử ngay
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Packages Section -->
+    <section class="packages">
+        <div class="container">
+            <h2 class="section-title">Gói dịch vụ</h2>
+            <p class="section-subtitle">
+                Chọn gói phù hợp với nhu cầu sử dụng của bạn
+            </p>
+            
+            <div class="packages-grid">
+                <div class="package-card">
+                    <h3 class="package-name">Miễn phí</h3>
+                    <div class="package-price">0 VND</div>
+                    <ul class="package-features">
+                        <li>5 câu hỏi AI/ngày</li>
+                        <li>Tìm kiếm cơ bản</li>
+                        <li>3 hợp đồng mẫu</li>
+                        <li>Hỗ trợ email</li>
+                    </ul>
+                    <a href="enhanced-chat.html" class="btn btn-secondary">
+                        Sử dụng miễn phí
+                    </a>
+                </div>
+                
+                <div class="package-card popular">
+                    <h3 class="package-name">Chuyên nghiệp</h3>
+                    <div class="package-price">299,000 VND/tháng</div>
+                    <ul class="package-features">
+                        <li>200 câu hỏi AI/ngày</li>
+                        <li>Tìm kiếm không giới hạn</li>
+                        <li>100 hợp đồng mẫu</li>
+                        <li>Hỗ trợ 24/7</li>
+                        <li>API access</li>
+                        <li>Tích hợp CRM</li>
+                    </ul>
+                    <a href="subscription.html" class="btn btn-primary">
+                        Chọn gói
+                    </a>
+                </div>
+                
+                <div class="package-card">
+                    <h3 class="package-name">Doanh nghiệp</h3>
+                    <div class="package-price">999,000 VND/tháng</div>
+                    <ul class="package-features">
+                        <li>Không giới hạn AI</li>
+                        <li>Tìm kiếm không giới hạn</li>
+                        <li>Hợp đồng không giới hạn</li>
+                        <li>Hỗ trợ chuyên dụng</li>
+                        <li>API không giới hạn</li>
+                        <li>Tích hợp tùy chỉnh</li>
+                        <li>Báo cáo nâng cao</li>
+                    </ul>
+                    <a href="subscription.html" class="btn btn-secondary">
+                        Chọn gói
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ViLaw</h3>
+                    <p>Nền tảng hạ tầng pháp lý số toàn dân</p>
+                    <p>Kết hợp AI + Voice + Blockchain + Dữ liệu mở</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Tính năng</h3>
+                    <p><a href="enhanced-chat.html">Chat AI</a></p>
+                    <p><a href="legal.html">Tìm kiếm luật</a></p>
+                    <p><a href="contract.html">Soạn thảo hợp đồng</a></p>
+                    <p><a href="documents.html">Quản lý tài liệu</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Hỗ trợ</h3>
+                    <p><a href="#">Trung tâm trợ giúp</a></p>
+                    <p><a href="#">Liên hệ</a></p>
+                    <p><a href="#">Báo lỗi</a></p>
+                    <p><a href="#">Đề xuất tính năng</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Pháp lý</h3>
+                    <p><a href="#">Điều khoản sử dụng</a></p>
+                    <p><a href="#">Chính sách bảo mật</a></p>
+                    <p><a href="#">Cookie Policy</a></p>
+                    <p><a href="#">GDPR</a></p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 ViLaw. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Dữ liệu Pháp luật - ViLaw</title>
+    <meta name="description" content="Hệ thống quản lý và cập nhật dữ liệu pháp luật Việt Nam cho AI ViLaw.">
+    
+    <!-- CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #76BA53;
+            --accent: #76819B;
+            --dark: #19253F;
+            --muted: #9B9CAA;
+            --primary-rgba-08: rgba(118, 186, 83, 0.08);
+            --accent-rgba-08: rgba(118, 129, 155, 0.08);
+            --primary-rgba-18: rgba(118, 186, 83, 0.18);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #EFF2F0;
+            color: #19253F;
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--primary-rgba-18);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.5);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #68a547;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+        }
+
+        .dashboard-card.large {
+            grid-column: span 2;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .card-action {
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .card-action:hover {
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive {
+            color: #10b981;
+        }
+
+        .stat-change.negative {
+            color: #ef4444;
+        }
+
+        .stat-change.neutral {
+            color: #6b7280;
+        }
+
+        /* Data Sources */
+        .data-sources {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .sources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .source-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .source-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .source-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .source-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .source-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .source-description {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .source-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .source-stat {
+            text-align: center;
+        }
+
+        .source-stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .source-stat-label {
+            color: #6b7280;
+            font-size: 0.75rem;
+        }
+
+        .source-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .source-button {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background: white;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .source-button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .source-button.primary {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .source-button.primary:hover {
+            background-color: #68a547;
+        }
+
+        /* Update Progress */
+        .update-progress {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .update-progress.active {
+            display: block;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .progress-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .progress-status.running {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .progress-status.completed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .progress-status.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background-color: #e5e7eb;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 0.25rem;
+            transition: width 0.3s ease;
+        }
+
+        .progress-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .progress-detail {
+            text-align: center;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+
+        .progress-detail-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+
+        .progress-detail-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        /* AI Training */
+        .ai-training {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .training-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .training-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .training-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .training-button:hover {
+            background-color: #68a547;
+        }
+
+        .training-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .training-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .training-stat {
+            text-align: center;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+
+        .training-stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+
+        .training-stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        /* Data Table */
+        .data-table {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .table-filters {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .table td {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .table tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-badge.updated {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-badge.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-badge.processing {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-card.large {
+                grid-column: span 1;
+            }
+
+            .sources-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <img src="assets/logo.jpg" alt="ViLaw">
+                    </div>
+                </a>
+
+                <nav class="nav">
+                    <a href="legal.html" class="nav-link">Văn bản</a>
+                    <a href="chat.html" class="nav-link">Chat AI</a>
+                    <a href="documents.html" class="nav-link">Soạn thảo</a>
+                    <a href="contract.html" class="nav-link">Hợp đồng</a>
+                    <a href="dashboard.html" class="nav-link">Admin</a>
+                </nav>
+
+                <div>
+                    <a href="loginuser.html" class="btn btn-primary">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        Đăng nhập
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Quản lý Dữ liệu Pháp luật</h1>
+                <p class="page-subtitle">
+                    Cập nhật và quản lý toàn bộ văn bản pháp luật Việt Nam cho AI ViLaw
+                </p>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tổng văn bản</h3>
+                        <i data-lucide="file-text" class="w-5 h-5 text-primary"></i>
+                    </div>
+                    <div class="stat-value" id="totalDocuments">156,789</div>
+                    <div class="stat-label">Văn bản pháp luật</div>
+                    <div class="stat-change positive">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        +2.3% tuần này
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Cập nhật hôm nay</h3>
+                        <i data-lucide="refresh-cw" class="w-5 h-5 text-accent"></i>
+                    </div>
+                    <div class="stat-value" id="todayUpdates">1,234</div>
+                    <div class="stat-label">Văn bản mới</div>
+                    <div class="stat-change positive">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        +15.7% so với hôm qua
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">AI Training</h3>
+                        <i data-lucide="brain" class="w-5 h-5 text-green-500"></i>
+                    </div>
+                    <div class="stat-value" id="aiTraining">98.5%</div>
+                    <div class="stat-label">Độ chính xác</div>
+                    <div class="stat-change positive">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        +0.3% so với tuần trước
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Nguồn dữ liệu</h3>
+                        <i data-lucide="database" class="w-5 h-5 text-blue-500"></i>
+                    </div>
+                    <div class="stat-value" id="dataSources">24</div>
+                    <div class="stat-label">Nguồn đang hoạt động</div>
+                    <div class="stat-change neutral">
+                        <i data-lucide="minus" class="w-4 h-4"></i>
+                        Không thay đổi
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Sources -->
+            <div class="data-sources">
+                <div class="card-header">
+                    <h3 class="card-title">Nguồn Dữ liệu Pháp luật</h3>
+                    <button class="btn btn-primary" onclick="dataManager.startFullUpdate()">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                        Cập nhật tất cả
+                    </button>
+                </div>
+
+                <div class="sources-grid">
+                    <div class="source-card">
+                        <div class="source-header">
+                            <div class="source-icon">
+                                <i data-lucide="globe" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="source-title">Chính phủ Việt Nam</h4>
+                            </div>
+                        </div>
+                        <p class="source-description">Cổng thông tin điện tử Chính phủ - Văn bản pháp luật chính thức</p>
+                        <div class="source-stats">
+                            <div class="source-stat">
+                                <div class="source-stat-value">45,678</div>
+                                <div class="source-stat-label">Văn bản</div>
+                            </div>
+                            <div class="source-stat">
+                                <div class="source-stat-value">99.8%</div>
+                                <div class="source-stat-label">Uptime</div>
+                            </div>
+                            <div class="source-stat">
+                                <div class="source-stat-value">2h</div>
+                                <div class="source-stat-label">Cập nhật</div>
+                            </div>
+                        </div>
+                        <div class="source-actions">
+                            <button class="source-button" onclick="dataManager.updateSource('chinhphu')">Cập nhật</button>
+                            <button class="source-button primary" onclick="dataManager.viewSource('chinhphu')">Xem</button>
+                        </div>
+                    </div>
+
+                    <div class="source-card">
+                        <div class="source-header">
+                            <div class="source-icon">
+                                <i data-lucide="scale" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="source-title">Quốc hội</h4>
+                            </div>
+                        </div>
+                        <p class="source-description">Cổng thông tin điện tử Quốc hội - Luật, Nghị quyết</p>
+                        <div class="source-stats">
+                            <div class="source-stat">
+                                <div class="source-stat-value">12,345</div>
+                                <div class="source-stat-label">Văn bản</div>
+                            </div>
+                            <div class="source-stat">
+                                <div class="source-stat-value">99.5%</div>
+                                <div class="source-stat-label">Uptime</div>
+                            </div>
+                            <div class="source-stat">
+                                <div class="source-stat-value">1h</div>
+                                <div class="source-stat-label">Cập nhật</div>
+                            </div>
+                        </div>
+                        <div class="source-actions">
+                            <button class="source-button" onclick="dataManager.updateSource('quochoi')">Cập nhật</button>
+                            <button class="source-button primary" onclick="dataManager.viewSource('quochoi')">Xem</button>
+                        </div>
+                    </div>
+
+                    <div class="source-card">
+                        <div class="source-header">
+                            <div class="source-icon">
+                                <i data-lucide="building" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="source-title">Bộ Tư pháp</h4>
+                            </div>
+                        </div>
+                        <p class="source-description">Cơ sở dữ liệu quốc gia về pháp luật - Hệ thống văn bản quy phạm pháp luật</p>
+                        <div class="source-stats">
+                            <div class="source-stat">
+                                <div class="source-stat-value">89,123</div>
+                                <div class="source-stat-label">Văn bản</div>
+                            </div>
+                            <div class="source-stat">
+                                <div class="source-stat-value">99.9%</div>
+                                <div class="source-stat-label">Uptime</div>
+                            </div>
+                            <div class="source-stat">
+                                <div class="source-stat-value">30m</div>
+                                <div class="source-stat-label">Cập nhật</div>
+                            </div>
+                        </div>
+                        <div class="source-actions">
+                            <button class="source-button" onclick="dataManager.updateSource('botuphap')">Cập nhật</button>
+                            <button class="source-button primary" onclick="dataManager.viewSource('botuphap')">Xem</button>
+                        </div>
+                    </div>
+
+                    <div class="source-card">
+                        <div class="source-header">
+                            <div class="source-icon">
+                                <i data-lucide="gavel" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h4 class="source-title">Tòa án Nhân dân Tối cao</h4>
+                            </div>
+                        </div>
+                        <p class="source-description">Hệ thống văn bản pháp luật - Án lệ, Quyết định</p>
+                        <div class="source-stats">
+                            <div class="source-stat">
+                                <div class="source-stat-value">23,456</div>
+                                <div class="source-stat-label">Văn bản</div>
+                            </div>
+                            <div class="source-stat">
+                                <div class="source-stat-value">98.7%</div>
+                                <div class="source-stat-label">Uptime</div>
+                            </div>
+                            <div class="source-stat">
+                                <div class="source-stat-value">4h</div>
+                                <div class="source-stat-label">Cập nhật</div>
+                            </div>
+                        </div>
+                        <div class="source-actions">
+                            <button class="source-button" onclick="dataManager.updateSource('toaan')">Cập nhật</button>
+                            <button class="source-button primary" onclick="dataManager.viewSource('toaan')">Xem</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Progress -->
+            <div class="update-progress" id="updateProgress">
+                <div class="progress-header">
+                    <h3 class="progress-title">Tiến trình Cập nhật</h3>
+                    <span class="progress-status running" id="progressStatus">Đang chạy</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-details">
+                    <div class="progress-detail">
+                        <div class="progress-detail-value" id="processedCount">0</div>
+                        <div class="progress-detail-label">Đã xử lý</div>
+                    </div>
+                    <div class="progress-detail">
+                        <div class="progress-detail-value" id="newCount">0</div>
+                        <div class="progress-detail-label">Văn bản mới</div>
+                    </div>
+                    <div class="progress-detail">
+                        <div class="progress-detail-value" id="updatedCount">0</div>
+                        <div class="progress-detail-label">Đã cập nhật</div>
+                    </div>
+                    <div class="progress-detail">
+                        <div class="progress-detail-value" id="errorCount">0</div>
+                        <div class="progress-detail-label">Lỗi</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Training -->
+            <div class="ai-training">
+                <div class="training-header">
+                    <h3 class="training-title">Training AI với Dữ liệu Mới</h3>
+                    <button class="training-button" id="trainingButton" onclick="dataManager.startAITraining()">
+                        <i data-lucide="brain" class="w-4 h-4"></i>
+                        Bắt đầu Training
+                    </button>
+                </div>
+
+                <div class="training-stats">
+                    <div class="training-stat">
+                        <div class="training-stat-value" id="trainingAccuracy">98.5%</div>
+                        <div class="training-stat-label">Độ chính xác</div>
+                    </div>
+                    <div class="training-stat">
+                        <div class="training-stat-value" id="trainingData">156K</div>
+                        <div class="training-stat-label">Dữ liệu training</div>
+                    </div>
+                    <div class="training-stat">
+                        <div class="training-stat-value" id="trainingTime">2.5h</div>
+                        <div class="training-stat-label">Thời gian training</div>
+                    </div>
+                    <div class="training-stat">
+                        <div class="training-stat-value" id="trainingStatus">Sẵn sàng</div>
+                        <div class="training-stat-label">Trạng thái</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Updates Table -->
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">Cập nhật Gần đây</h3>
+                    <div class="table-filters">
+                        <select class="filter-select" id="statusFilter">
+                            <option value="all">Tất cả trạng thái</option>
+                            <option value="updated">Đã cập nhật</option>
+                            <option value="pending">Chờ xử lý</option>
+                            <option value="error">Lỗi</option>
+                        </select>
+                        <select class="filter-select" id="sourceFilter">
+                            <option value="all">Tất cả nguồn</option>
+                            <option value="chinhphu">Chính phủ</option>
+                            <option value="quochoi">Quốc hội</option>
+                            <option value="botuphap">Bộ Tư pháp</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tên văn bản</th>
+                                <th>Nguồn</th>
+                                <th>Loại</th>
+                                <th>Ngày cập nhật</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="updatesTableBody">
+                            <!-- Table content will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Legal data management functionality
+        class LegalDataManager {
+            constructor() {
+                this.isUpdating = false;
+                this.isTraining = false;
+                this.updateProgress = 0;
+                this.processedCount = 0;
+                this.newCount = 0;
+                this.updatedCount = 0;
+                this.errorCount = 0;
+                
+                this.initializeElements();
+                this.bindEvents();
+                this.loadData();
+            }
+            
+            initializeElements() {
+                this.updateProgressEl = document.getElementById('updateProgress');
+                this.progressFill = document.getElementById('progressFill');
+                this.progressStatus = document.getElementById('progressStatus');
+                this.processedCountEl = document.getElementById('processedCount');
+                this.newCountEl = document.getElementById('newCount');
+                this.updatedCountEl = document.getElementById('updatedCount');
+                this.errorCountEl = document.getElementById('errorCount');
+                this.trainingButton = document.getElementById('trainingButton');
+                this.updatesTableBody = document.getElementById('updatesTableBody');
+                this.statusFilter = document.getElementById('statusFilter');
+                this.sourceFilter = document.getElementById('sourceFilter');
+            }
+            
+            bindEvents() {
+                this.statusFilter.addEventListener('change', () => this.filterTable());
+                this.sourceFilter.addEventListener('change', () => this.filterTable());
+            }
+            
+            loadData() {
+                this.loadRecentUpdates();
+                this.startAutoUpdate();
+            }
+            
+            loadRecentUpdates() {
+                const updates = [
+                    {
+                        name: 'Luật An ninh mạng 2018',
+                        source: 'Quốc hội',
+                        type: 'Luật',
+                        date: '15/11/2024',
+                        status: 'updated'
+                    },
+                    {
+                        name: 'Nghị định 15/2020/NĐ-CP',
+                        source: 'Chính phủ',
+                        type: 'Nghị định',
+                        date: '15/11/2024',
+                        status: 'updated'
+                    },
+                    {
+                        name: 'Thông tư 78/2021/TT-BTC',
+                        source: 'Bộ Tư pháp',
+                        type: 'Thông tư',
+                        date: '14/11/2024',
+                        status: 'pending'
+                    },
+                    {
+                        name: 'Quyết định 15/2020/QĐ-TTg',
+                        source: 'Chính phủ',
+                        type: 'Quyết định',
+                        date: '14/11/2024',
+                        status: 'error'
+                    },
+                    {
+                        name: 'Luật Doanh nghiệp 2020',
+                        source: 'Quốc hội',
+                        type: 'Luật',
+                        date: '13/11/2024',
+                        status: 'updated'
+                    }
+                ];
+                
+                this.renderUpdatesTable(updates);
+            }
+            
+            renderUpdatesTable(updates) {
+                this.updatesTableBody.innerHTML = updates.map(update => `
+                    <tr>
+                        <td>${update.name}</td>
+                        <td>${update.source}</td>
+                        <td>${update.type}</td>
+                        <td>${update.date}</td>
+                        <td><span class="status-badge ${update.status}">${this.getStatusText(update.status)}</span></td>
+                        <td>
+                            <button class="btn btn-secondary" onclick="dataManager.viewDocument('${update.name}')">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                // Re-initialize icons
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+            
+            getStatusText(status) {
+                const texts = {
+                    'updated': 'Đã cập nhật',
+                    'pending': 'Chờ xử lý',
+                    'error': 'Lỗi',
+                    'processing': 'Đang xử lý'
+                };
+                return texts[status] || status;
+            }
+            
+            async startFullUpdate() {
+                if (this.isUpdating) return;
+                
+                this.isUpdating = true;
+                this.updateProgressEl.classList.add('active');
+                this.progressStatus.textContent = 'Đang chạy';
+                this.progressStatus.className = 'progress-status running';
+                
+                try {
+                    await this.simulateUpdate();
+                    this.progressStatus.textContent = 'Hoàn thành';
+                    this.progressStatus.className = 'progress-status completed';
+                } catch (error) {
+                    this.progressStatus.textContent = 'Lỗi';
+                    this.progressStatus.className = 'progress-status error';
+                } finally {
+                    this.isUpdating = false;
+                    this.loadRecentUpdates();
+                }
+            }
+            
+            async simulateUpdate() {
+                const totalSteps = 100;
+                
+                for (let i = 0; i <= totalSteps; i++) {
+                    this.updateProgress = (i / totalSteps) * 100;
+                    this.progressFill.style.width = this.updateProgress + '%';
+                    
+                    // Simulate processing
+                    this.processedCount = Math.floor(i * 156.789);
+                    this.newCount = Math.floor(i * 12.34);
+                    this.updatedCount = Math.floor(i * 8.9);
+                    this.errorCount = Math.floor(i * 0.1);
+                    
+                    this.processedCountEl.textContent = this.processedCount.toLocaleString();
+                    this.newCountEl.textContent = this.newCount.toLocaleString();
+                    this.updatedCountEl.textContent = this.updatedCount.toLocaleString();
+                    this.errorCountEl.textContent = this.errorCount.toLocaleString();
+                    
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+            }
+            
+            async updateSource(sourceId) {
+                if (this.isUpdating) return;
+                
+                this.isUpdating = true;
+                this.updateProgressEl.classList.add('active');
+                
+                try {
+                    await this.simulateSourceUpdate(sourceId);
+                    this.progressStatus.textContent = 'Hoàn thành';
+                    this.progressStatus.className = 'progress-status completed';
+                } catch (error) {
+                    this.progressStatus.textContent = 'Lỗi';
+                    this.progressStatus.className = 'progress-status error';
+                } finally {
+                    this.isUpdating = false;
+                    this.loadRecentUpdates();
+                }
+            }
+            
+            async simulateSourceUpdate(sourceId) {
+                const sourceNames = {
+                    'chinhphu': 'Chính phủ',
+                    'quochoi': 'Quốc hội',
+                    'botuphap': 'Bộ Tư pháp',
+                    'toaan': 'Tòa án'
+                };
+                
+                this.progressStatus.textContent = `Đang cập nhật ${sourceNames[sourceId]}...`;
+                
+                const totalSteps = 50;
+                for (let i = 0; i <= totalSteps; i++) {
+                    this.updateProgress = (i / totalSteps) * 100;
+                    this.progressFill.style.width = this.updateProgress + '%';
+                    
+                    this.processedCount = Math.floor(i * 45.678);
+                    this.newCount = Math.floor(i * 2.34);
+                    this.updatedCount = Math.floor(i * 1.23);
+                    
+                    this.processedCountEl.textContent = this.processedCount.toLocaleString();
+                    this.newCountEl.textContent = this.newCount.toLocaleString();
+                    this.updatedCountEl.textContent = this.updatedCount.toLocaleString();
+                    
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                }
+            }
+            
+            async startAITraining() {
+                if (this.isTraining) return;
+                
+                this.isTraining = true;
+                this.trainingButton.disabled = true;
+                this.trainingButton.innerHTML = '<i data-lucide="loader" class="w-4 h-4"></i> Đang training...';
+                
+                try {
+                    await this.simulateAITraining();
+                    this.trainingButton.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Hoàn thành';
+                } catch (error) {
+                    this.trainingButton.innerHTML = '<i data-lucide="x" class="w-4 h-4"></i> Lỗi';
+                } finally {
+                    this.isTraining = false;
+                    setTimeout(() => {
+                        this.trainingButton.disabled = false;
+                        this.trainingButton.innerHTML = '<i data-lucide="brain" class="w-4 h-4"></i> Bắt đầu Training';
+                    }, 3000);
+                }
+            }
+            
+            async simulateAITraining() {
+                const trainingSteps = [
+                    { text: 'Đang chuẩn bị dữ liệu...', progress: 10 },
+                    { text: 'Phân tích văn bản...', progress: 30 },
+                    { text: 'Training model...', progress: 60 },
+                    { text: 'Validation...', progress: 80 },
+                    { text: 'Hoàn thành training...', progress: 100 }
+                ];
+                
+                for (const step of trainingSteps) {
+                    this.trainingButton.innerHTML = `<i data-lucide="loader" class="w-4 h-4"></i> ${step.text}`;
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                }
+            }
+            
+            viewSource(sourceId) {
+                const sourceNames = {
+                    'chinhphu': 'Chính phủ Việt Nam',
+                    'quochoi': 'Quốc hội',
+                    'botuphap': 'Bộ Tư pháp',
+                    'toaan': 'Tòa án Nhân dân Tối cao'
+                };
+                
+                alert(`Xem chi tiết nguồn: ${sourceNames[sourceId]}`);
+            }
+            
+            viewDocument(documentName) {
+                alert(`Xem chi tiết văn bản: ${documentName}`);
+            }
+            
+            filterTable() {
+                // Implement table filtering
+                this.loadRecentUpdates();
+            }
+            
+            startAutoUpdate() {
+                // Auto-update every 30 minutes
+                setInterval(() => {
+                    if (!this.isUpdating) {
+                        this.startFullUpdate();
+                    }
+                }, 30 * 60 * 1000);
+            }
+        }
+        
+        // Initialize data manager
+        let dataManager;
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            dataManager = new LegalDataManager();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phân tích Hợp đồng - ViLaw</title>
+    <meta name="description" content="Phân tích hợp đồng với AI thông minh. Phát hiện rủi ro, đề xuất cải thiện và tối ưu hóa hợp đồng.">
+    
+    <!-- CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #76BA53;
+            --accent: #76819B;
+            --dark: #19253F;
+            --muted: #9B9CAA;
+            --primary-rgba-08: rgba(118, 186, 83, 0.08);
+            --accent-rgba-08: rgba(118, 129, 155, 0.08);
+            --primary-rgba-18: rgba(118, 186, 83, 0.18);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #EFF2F0;
+            color: #19253F;
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--primary-rgba-18);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.5);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #68a547;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.75rem;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-rgba-08);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary);
+            background-color: var(--primary-rgba-08);
+        }
+
+        .upload-icon {
+            width: 4rem;
+            height: 4rem;
+            margin: 0 auto 1rem;
+            color: #6b7280;
+        }
+
+        .upload-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-description {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .upload-button:hover {
+            background-color: #68a547;
+        }
+
+        .upload-input {
+            display: none;
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .file-info.active {
+            display: block;
+        }
+
+        .file-details {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .file-icon {
+            width: 2rem;
+            height: 2rem;
+            color: var(--primary);
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #111827;
+        }
+
+        .file-size {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .file-remove {
+            margin-left: auto;
+            color: #ef4444;
+            cursor: pointer;
+        }
+
+        /* Analysis Section */
+        .analysis-section {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .analysis-section.active {
+            display: block;
+        }
+
+        .analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .analysis-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .analysis-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .analysis-button:hover {
+            background-color: #68a547;
+        }
+
+        .analysis-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .analysis-progress {
+            display: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .analysis-progress.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background-color: #e5e7eb;
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 0.25rem;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 0.5rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .results-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .results-action {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .results-action.primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .results-action.primary:hover {
+            background-color: #68a547;
+        }
+
+        .results-action.secondary {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .results-action.secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .results-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .result-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        .result-card.high-risk {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+
+        .result-card.medium-risk {
+            border-color: #f59e0b;
+            background-color: #fffbeb;
+        }
+
+        .result-card.low-risk {
+            border-color: #10b981;
+            background-color: #f0fdf4;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-icon.high-risk {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .result-icon.medium-risk {
+            background-color: #f59e0b;
+            color: white;
+        }
+
+        .result-icon.low-risk {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .result-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .result-description {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .result-suggestions {
+            list-style: none;
+        }
+
+        .result-suggestions li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: #374151;
+        }
+
+        .result-suggestions li i {
+            color: var(--primary);
+            margin-top: 0.125rem;
+        }
+
+        /* Summary Section */
+        .summary-section {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .summary-section.active {
+            display: block;
+        }
+
+        .summary-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .summary-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .summary-stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .summary-content {
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <img src="assets/logo.jpg" alt="ViLaw">
+                    </div>
+                </a>
+
+                <nav class="nav">
+                    <a href="legal.html" class="nav-link">Văn bản</a>
+                    <a href="chat.html" class="nav-link">Chat AI</a>
+                    <a href="documents.html" class="nav-link">Soạn thảo</a>
+                    <a href="contract.html" class="nav-link active">Hợp đồng</a>
+                    <a href="dashboard.html" class="nav-link">Admin</a>
+                </nav>
+
+                <div>
+                    <a href="loginuser.html" class="btn btn-primary">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        Đăng nhập
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Phân tích Hợp đồng</h1>
+                <p class="page-subtitle">
+                    Phát hiện rủi ro và đề xuất cải thiện hợp đồng với AI thông minh
+                </p>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <i data-lucide="upload" class="w-16 h-16"></i>
+                    </div>
+                    <h3 class="upload-title">Tải lên hợp đồng để phân tích</h3>
+                    <p class="upload-description">
+                        Hỗ trợ định dạng PDF, DOC, DOCX. Tối đa 10MB.
+                    </p>
+                    <button class="upload-button" onclick="document.getElementById('fileInput').click()">
+                        Chọn file
+                    </button>
+                    <input type="file" id="fileInput" class="upload-input" accept=".pdf,.doc,.docx" onchange="contractApp.handleFileUpload(event)">
+                </div>
+
+                <div class="file-info" id="fileInfo">
+                    <div class="file-details">
+                        <i data-lucide="file-text" class="file-icon"></i>
+                        <div>
+                            <div class="file-name" id="fileName"></div>
+                            <div class="file-size" id="fileSize"></div>
+                        </div>
+                        <button class="file-remove" onclick="contractApp.removeFile()">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Section -->
+            <div class="analysis-section" id="analysisSection">
+                <div class="analysis-header">
+                    <h2 class="analysis-title">Phân tích hợp đồng</h2>
+                    <button class="analysis-button" id="analyzeButton" onclick="contractApp.startAnalysis()">
+                        <i data-lucide="play" class="w-4 h-4"></i>
+                        Bắt đầu phân tích
+                    </button>
+                </div>
+
+                <div class="analysis-progress" id="analysisProgress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Đang phân tích...</div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <div class="results-header">
+                    <h2 class="results-title">Kết quả phân tích</h2>
+                    <div class="results-actions">
+                        <button class="results-action secondary" onclick="contractApp.downloadReport()">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            Tải báo cáo
+                        </button>
+                        <button class="results-action primary" onclick="contractApp.shareResults()">
+                            <i data-lucide="share-2" class="w-4 h-4"></i>
+                            Chia sẻ
+                        </button>
+                    </div>
+                </div>
+
+                <div class="results-grid" id="resultsGrid">
+                    <!-- Results will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="summary-section" id="summarySection">
+                <h2 class="summary-title">Tóm tắt phân tích</h2>
+                
+                <div class="summary-stats" id="summaryStats">
+                    <!-- Stats will be populated by JavaScript -->
+                </div>
+
+                <div class="summary-content" id="summaryContent">
+                    <!-- Summary content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Contract analysis functionality
+        class ContractAnalysisApp {
+            constructor() {
+                this.uploadedFile = null;
+                this.analysisResults = null;
+                this.isAnalyzing = false;
+                
+                this.initializeElements();
+                this.bindEvents();
+            }
+            
+            initializeElements() {
+                this.uploadArea = document.getElementById('uploadArea');
+                this.fileInput = document.getElementById('fileInput');
+                this.fileInfo = document.getElementById('fileInfo');
+                this.fileName = document.getElementById('fileName');
+                this.fileSize = document.getElementById('fileSize');
+                this.analysisSection = document.getElementById('analysisSection');
+                this.analyzeButton = document.getElementById('analyzeButton');
+                this.analysisProgress = document.getElementById('analysisProgress');
+                this.progressFill = document.getElementById('progressFill');
+                this.progressText = document.getElementById('progressText');
+                this.resultsSection = document.getElementById('resultsSection');
+                this.resultsGrid = document.getElementById('resultsGrid');
+                this.summarySection = document.getElementById('summarySection');
+                this.summaryStats = document.getElementById('summaryStats');
+                this.summaryContent = document.getElementById('summaryContent');
+            }
+            
+            bindEvents() {
+                // Drag and drop
+                this.uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    this.uploadArea.classList.add('dragover');
+                });
+                
+                this.uploadArea.addEventListener('dragleave', () => {
+                    this.uploadArea.classList.remove('dragover');
+                });
+                
+                this.uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    this.uploadArea.classList.remove('dragover');
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        this.handleFileUpload({ target: { files } });
+                    }
+                });
+            }
+            
+            handleFileUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                // Validate file type
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Chỉ hỗ trợ file PDF, DOC, DOCX');
+                    return;
+                }
+                
+                // Validate file size (10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('File quá lớn. Tối đa 10MB');
+                    return;
+                }
+                
+                this.uploadedFile = file;
+                this.showFileInfo(file);
+                this.showAnalysisSection();
+            }
+            
+            showFileInfo(file) {
+                this.fileName.textContent = file.name;
+                this.fileSize.textContent = this.formatFileSize(file.size);
+                this.fileInfo.classList.add('active');
+            }
+            
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            removeFile() {
+                this.uploadedFile = null;
+                this.fileInfo.classList.remove('active');
+                this.analysisSection.classList.remove('active');
+                this.resultsSection.classList.remove('active');
+                this.summarySection.classList.remove('active');
+                this.fileInput.value = '';
+            }
+            
+            showAnalysisSection() {
+                this.analysisSection.classList.add('active');
+                this.analysisSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            async startAnalysis() {
+                if (!this.uploadedFile || this.isAnalyzing) return;
+                
+                this.isAnalyzing = true;
+                this.analyzeButton.disabled = true;
+                this.analysisProgress.classList.add('active');
+                
+                try {
+                    // Simulate analysis progress
+                    await this.simulateAnalysisProgress();
+                    
+                    // Generate analysis results
+                    this.analysisResults = this.generateAnalysisResults();
+                    
+                    // Show results
+                    this.showResults();
+                    this.showSummary();
+                    
+                } catch (error) {
+                    console.error('Analysis error:', error);
+                    alert('Có lỗi xảy ra khi phân tích hợp đồng. Vui lòng thử lại.');
+                } finally {
+                    this.isAnalyzing = false;
+                    this.analyzeButton.disabled = false;
+                    this.analysisProgress.classList.remove('active');
+                }
+            }
+            
+            async simulateAnalysisProgress() {
+                const steps = [
+                    { text: 'Đang đọc file...', progress: 20 },
+                    { text: 'Phân tích nội dung...', progress: 40 },
+                    { text: 'Kiểm tra rủi ro pháp lý...', progress: 60 },
+                    { text: 'Đánh giá điều khoản...', progress: 80 },
+                    { text: 'Tạo báo cáo...', progress: 100 }
+                ];
+                
+                for (const step of steps) {
+                    this.progressFill.style.width = step.progress + '%';
+                    this.progressText.textContent = step.text;
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+            }
+            
+            generateAnalysisResults() {
+                return {
+                    risks: [
+                        {
+                            id: 1,
+                            title: 'Thiếu điều khoản bảo mật',
+                            description: 'Hợp đồng không có điều khoản bảo mật thông tin, có thể gây rủi ro về bảo mật dữ liệu.',
+                            riskLevel: 'high',
+                            suggestions: [
+                                'Thêm điều khoản bảo mật thông tin',
+                                'Quy định trách nhiệm bảo mật của các bên',
+                                'Thiết lập biện pháp bảo vệ dữ liệu'
+                            ]
+                        },
+                        {
+                            id: 2,
+                            title: 'Điều khoản thanh toán không rõ ràng',
+                            description: 'Thời hạn và phương thức thanh toán chưa được quy định cụ thể.',
+                            riskLevel: 'medium',
+                            suggestions: [
+                                'Quy định rõ thời hạn thanh toán',
+                                'Xác định phương thức thanh toán',
+                                'Thiết lập lãi suất quá hạn'
+                            ]
+                        },
+                        {
+                            id: 3,
+                            title: 'Thiếu điều khoản giải quyết tranh chấp',
+                            description: 'Hợp đồng không có điều khoản về cách giải quyết tranh chấp.',
+                            riskLevel: 'medium',
+                            suggestions: [
+                                'Thêm điều khoản giải quyết tranh chấp',
+                                'Quy định cơ quan có thẩm quyền',
+                                'Thiết lập quy trình hòa giải'
+                            ]
+                        },
+                        {
+                            id: 4,
+                            title: 'Điều khoản chấm dứt hợp đồng',
+                            description: 'Điều kiện chấm dứt hợp đồng cần được bổ sung chi tiết.',
+                            riskLevel: 'low',
+                            suggestions: [
+                                'Quy định rõ điều kiện chấm dứt',
+                                'Thiết lập thông báo trước',
+                                'Quy định trách nhiệm sau chấm dứt'
+                            ]
+                        }
+                    ],
+                    summary: {
+                        totalRisks: 4,
+                        highRisks: 1,
+                        mediumRisks: 2,
+                        lowRisks: 1,
+                        overallScore: 75,
+                        recommendations: [
+                            'Bổ sung điều khoản bảo mật thông tin',
+                            'Làm rõ điều khoản thanh toán',
+                            'Thêm điều khoản giải quyết tranh chấp',
+                            'Hoàn thiện điều khoản chấm dứt hợp đồng'
+                        ]
+                    }
+                };
+            }
+            
+            showResults() {
+                this.resultsSection.classList.add('active');
+                this.resultsSection.scrollIntoView({ behavior: 'smooth' });
+                
+                this.resultsGrid.innerHTML = this.analysisResults.risks.map(risk => `
+                    <div class="result-card ${risk.riskLevel}-risk">
+                        <div class="result-header">
+                            <div class="result-icon ${risk.riskLevel}-risk">
+                                <i data-lucide="${this.getRiskIcon(risk.riskLevel)}" class="w-4 h-4"></i>
+                            </div>
+                            <h3 class="result-title">${risk.title}</h3>
+                        </div>
+                        <p class="result-description">${risk.description}</p>
+                        <ul class="result-suggestions">
+                            ${risk.suggestions.map(suggestion => `
+                                <li>
+                                    <i data-lucide="check" class="w-3 h-3"></i>
+                                    ${suggestion}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `).join('');
+                
+                // Re-initialize icons
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+            
+            showSummary() {
+                this.summarySection.classList.add('active');
+                
+                const summary = this.analysisResults.summary;
+                
+                this.summaryStats.innerHTML = `
+                    <div class="summary-stat">
+                        <div class="summary-stat-value">${summary.totalRisks}</div>
+                        <div class="summary-stat-label">Tổng rủi ro</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value">${summary.highRisks}</div>
+                        <div class="summary-stat-label">Rủi ro cao</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value">${summary.mediumRisks}</div>
+                        <div class="summary-stat-label">Rủi ro trung bình</div>
+                    </div>
+                    <div class="summary-stat">
+                        <div class="summary-stat-value">${summary.overallScore}%</div>
+                        <div class="summary-stat-label">Điểm tổng thể</div>
+                    </div>
+                `;
+                
+                this.summaryContent.innerHTML = `
+                    <h3 style="margin-bottom: 1rem; color: #111827;">Khuyến nghị chung</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        ${summary.recommendations.map(rec => `
+                            <li style="display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i data-lucide="check" class="w-4 h-4" style="color: var(--primary); margin-top: 0.125rem;"></i>
+                                <span>${rec}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+                
+                // Re-initialize icons
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+            
+            getRiskIcon(riskLevel) {
+                const icons = {
+                    'high': 'alert-triangle',
+                    'medium': 'alert-circle',
+                    'low': 'info'
+                };
+                return icons[riskLevel] || 'info';
+            }
+            
+            downloadReport() {
+                if (!this.analysisResults) return;
+                
+                const report = this.generateReport();
+                const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'contract_analysis_report.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+            
+            generateReport() {
+                const summary = this.analysisResults.summary;
+                const risks = this.analysisResults.risks;
+                
+                let report = `BÁO CÁO PHÂN TÍCH HỢP ĐỒNG\n`;
+                report += `================================\n\n`;
+                report += `Tổng quan:\n`;
+                report += `- Tổng số rủi ro: ${summary.totalRisks}\n`;
+                report += `- Rủi ro cao: ${summary.highRisks}\n`;
+                report += `- Rủi ro trung bình: ${summary.mediumRisks}\n`;
+                report += `- Rủi ro thấp: ${summary.lowRisks}\n`;
+                report += `- Điểm tổng thể: ${summary.overallScore}%\n\n`;
+                
+                report += `Chi tiết rủi ro:\n`;
+                risks.forEach((risk, index) => {
+                    report += `${index + 1}. ${risk.title}\n`;
+                    report += `   Mức độ: ${risk.riskLevel}\n`;
+                    report += `   Mô tả: ${risk.description}\n`;
+                    report += `   Khuyến nghị:\n`;
+                    risk.suggestions.forEach(suggestion => {
+                        report += `   - ${suggestion}\n`;
+                    });
+                    report += `\n`;
+                });
+                
+                report += `Khuyến nghị chung:\n`;
+                summary.recommendations.forEach(rec => {
+                    report += `- ${rec}\n`;
+                });
+                
+                return report;
+            }
+            
+            shareResults() {
+                if (!this.analysisResults) return;
+                
+                const summary = this.analysisResults.summary;
+                const shareText = `Kết quả phân tích hợp đồng:\n- Tổng rủi ro: ${summary.totalRisks}\n- Điểm tổng thể: ${summary.overallScore}%\n- Rủi ro cao: ${summary.highRisks}`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Kết quả phân tích hợp đồng',
+                        text: shareText,
+                        url: window.location.href
+                    });
+                } else {
+                    navigator.clipboard.writeText(shareText);
+                    alert('Đã sao chép kết quả để chia sẻ');
+                }
+            }
+        }
+        
+        // Initialize contract analysis app
+        let contractApp;
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            contractApp = new ContractAnalysisApp();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tra cứu Pháp luật - ViLaw</title>
+    <meta name="description" content="Tìm kiếm và tra cứu văn bản pháp luật Việt Nam với AI thông minh. Cơ sở dữ liệu pháp luật toàn diện.">
+    
+    <!-- CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #76BA53;
+            --accent: #76819B;
+            --dark: #19253F;
+            --muted: #9B9CAA;
+            --primary-rgba-08: rgba(118, 186, 83, 0.08);
+            --accent-rgba-08: rgba(118, 129, 155, 0.08);
+            --primary-rgba-18: rgba(118, 186, 83, 0.18);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #EFF2F0;
+            color: #19253F;
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--primary-rgba-18);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.5);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #68a547;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(118, 186, 83, 0.1);
+        }
+
+        .search-button {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .search-button:hover {
+            background-color: #68a547;
+        }
+
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .filter-select {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Results Section */
+        .results-section {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .results-count {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .results-sort {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sort-select {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .result-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .result-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .result-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .result-type {
+            background-color: var(--primary-rgba-08);
+            color: var(--primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .result-content {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .result-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .result-action {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .result-action:hover {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .result-action.primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .result-action.primary:hover {
+            background-color: #68a547;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .pagination-button {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            background: white;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pagination-button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .pagination-button.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .pagination-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Categories Sidebar */
+        .categories-sidebar {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .category-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            color: #6b7280;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .category-link:hover {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .category-link.active {
+            background-color: var(--primary-rgba-08);
+            color: var(--primary);
+        }
+
+        .category-count {
+            margin-left: auto;
+            font-size: 0.75rem;
+            background-color: #f3f4f6;
+            color: #6b7280;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .search-filters {
+                grid-template-columns: 1fr;
+            }
+
+            .results-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <img src="assets/logo.jpg" alt="ViLaw">
+                    </div>
+                </a>
+
+                <nav class="nav">
+                    <a href="legal.html" class="nav-link active">Văn bản</a>
+                    <a href="chat.html" class="nav-link">Chat AI</a>
+                    <a href="documents.html" class="nav-link">Soạn thảo</a>
+                    <a href="contract.html" class="nav-link">Hợp đồng</a>
+                    <a href="dashboard.html" class="nav-link">Admin</a>
+                </nav>
+
+                <div>
+                    <a href="loginuser.html" class="btn btn-primary">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        Đăng nhập
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Tra cứu Pháp luật</h1>
+                <p class="page-subtitle">
+                    Tìm kiếm và duyệt văn bản pháp luật Việt Nam với AI thông minh
+                </p>
+            </div>
+
+            <!-- Search Section -->
+            <div class="search-section">
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Nhập từ khóa tìm kiếm..."
+                    >
+                    <button id="searchButton" class="search-button">
+                        <i data-lucide="search" class="w-4 h-4"></i>
+                        Tìm kiếm
+                    </button>
+                </div>
+
+                <div class="search-filters">
+                    <div class="filter-group">
+                        <label class="filter-label">Loại văn bản</label>
+                        <select id="documentType" class="filter-select">
+                            <option value="all">Tất cả</option>
+                            <option value="law">Luật</option>
+                            <option value="decree">Nghị định</option>
+                            <option value="circular">Thông tư</option>
+                            <option value="decision">Quyết định</option>
+                            <option value="directive">Chỉ thị</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Lĩnh vực</label>
+                        <select id="field" class="filter-select">
+                            <option value="all">Tất cả</option>
+                            <option value="civil">Dân sự</option>
+                            <option value="criminal">Hình sự</option>
+                            <option value="labor">Lao động</option>
+                            <option value="property">Tài sản</option>
+                            <option value="business">Kinh doanh</option>
+                            <option value="tax">Thuế</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Thời gian</label>
+                        <select id="timeRange" class="filter-select">
+                            <option value="all">Tất cả</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Cơ quan ban hành</label>
+                        <select id="issuingBody" class="filter-select">
+                            <option value="all">Tất cả</option>
+                            <option value="quoc-hoi">Quốc hội</option>
+                            <option value="chinh-phu">Chính phủ</option>
+                            <option value="bo-nganh">Bộ, ngành</option>
+                            <option value="ubnd">UBND</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+                <div class="results-header">
+                    <div class="results-count" id="resultsCount">Tìm thấy 0 kết quả</div>
+                    <div class="results-sort">
+                        <label>Sắp xếp:</label>
+                        <select id="sortBy" class="sort-select">
+                            <option value="relevance">Mức độ liên quan</option>
+                            <option value="date">Ngày ban hành</option>
+                            <option value="title">Tiêu đề</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="results-grid" id="resultsGrid">
+                    <!-- Results will be populated by JavaScript -->
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Legal search functionality
+        class LegalSearchApp {
+            constructor() {
+                this.currentPage = 1;
+                this.resultsPerPage = 10;
+                this.totalResults = 0;
+                this.currentResults = [];
+                this.searchQuery = '';
+                this.filters = {
+                    documentType: 'all',
+                    field: 'all',
+                    timeRange: 'all',
+                    issuingBody: 'all'
+                };
+                this.sortBy = 'relevance';
+                
+                this.initializeElements();
+                this.bindEvents();
+                this.loadInitialData();
+            }
+            
+            initializeElements() {
+                this.searchInput = document.getElementById('searchInput');
+                this.searchButton = document.getElementById('searchButton');
+                this.documentType = document.getElementById('documentType');
+                this.field = document.getElementById('field');
+                this.timeRange = document.getElementById('timeRange');
+                this.issuingBody = document.getElementById('issuingBody');
+                this.sortBy = document.getElementById('sortBy');
+                this.resultsCount = document.getElementById('resultsCount');
+                this.resultsGrid = document.getElementById('resultsGrid');
+                this.pagination = document.getElementById('pagination');
+            }
+            
+            bindEvents() {
+                this.searchButton.addEventListener('click', () => this.performSearch());
+                this.searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.performSearch();
+                    }
+                });
+                
+                // Filter changes
+                [this.documentType, this.field, this.timeRange, this.issuingBody, this.sortBy].forEach(element => {
+                    element.addEventListener('change', () => this.performSearch());
+                });
+            }
+            
+            loadInitialData() {
+                // Load sample data
+                this.sampleData = [
+                    {
+                        id: 1,
+                        title: 'Luật Doanh nghiệp 2020',
+                        type: 'law',
+                        field: 'business',
+                        year: 2020,
+                        issuingBody: 'quoc-hoi',
+                        content: 'Luật này quy định về việc thành lập, quản lý, tổ chức lại, giải thể doanh nghiệp; quyền và nghĩa vụ của chủ sở hữu, thành viên, cổ đông của doanh nghiệp.',
+                        relevance: 95
+                    },
+                    {
+                        id: 2,
+                        title: 'Nghị định 15/2020/NĐ-CP về chống dịch COVID-19',
+                        type: 'decree',
+                        field: 'civil',
+                        year: 2020,
+                        issuingBody: 'chinh-phu',
+                        content: 'Nghị định quy định về các biện pháp phòng, chống dịch bệnh COVID-19 và hỗ trợ doanh nghiệp, người dân gặp khó khăn do dịch bệnh.',
+                        relevance: 90
+                    },
+                    {
+                        id: 3,
+                        title: 'Thông tư 78/2021/TT-BTC về thuế thu nhập doanh nghiệp',
+                        type: 'circular',
+                        field: 'tax',
+                        year: 2021,
+                        issuingBody: 'bo-nganh',
+                        content: 'Thông tư hướng dẫn về thuế thu nhập doanh nghiệp, bao gồm các quy định về tính thuế, khai thuế và nộp thuế.',
+                        relevance: 85
+                    },
+                    {
+                        id: 4,
+                        title: 'Luật Lao động 2019',
+                        type: 'law',
+                        field: 'labor',
+                        year: 2019,
+                        issuingBody: 'quoc-hoi',
+                        content: 'Luật này quy định về quyền và nghĩa vụ của người lao động, người sử dụng lao động, quan hệ lao động và các vấn đề khác liên quan đến lao động.',
+                        relevance: 88
+                    },
+                    {
+                        id: 5,
+                        title: 'Quyết định 15/2020/QĐ-TTg về hỗ trợ người dân gặp khó khăn',
+                        type: 'decision',
+                        field: 'civil',
+                        year: 2020,
+                        issuingBody: 'chinh-phu',
+                        content: 'Quyết định về các biện pháp hỗ trợ người dân gặp khó khăn do ảnh hưởng của dịch bệnh COVID-19.',
+                        relevance: 82
+                    }
+                ];
+                
+                this.performSearch();
+            }
+            
+            performSearch() {
+                this.searchQuery = this.searchInput.value.trim();
+                this.filters = {
+                    documentType: this.documentType.value,
+                    field: this.field.value,
+                    timeRange: this.timeRange.value,
+                    issuingBody: this.issuingBody.value
+                };
+                this.sortBy = this.sortBy.value;
+                
+                this.filterResults();
+                this.renderResults();
+                this.renderPagination();
+            }
+            
+            filterResults() {
+                let filtered = [...this.sampleData];
+                
+                // Filter by search query
+                if (this.searchQuery) {
+                    filtered = filtered.filter(item => 
+                        item.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                        item.content.toLowerCase().includes(this.searchQuery.toLowerCase())
+                    );
+                }
+                
+                // Filter by document type
+                if (this.filters.documentType !== 'all') {
+                    filtered = filtered.filter(item => item.type === this.filters.documentType);
+                }
+                
+                // Filter by field
+                if (this.filters.field !== 'all') {
+                    filtered = filtered.filter(item => item.field === this.filters.field);
+                }
+                
+                // Filter by time range
+                if (this.filters.timeRange !== 'all') {
+                    const year = parseInt(this.filters.timeRange);
+                    filtered = filtered.filter(item => item.year === year);
+                }
+                
+                // Filter by issuing body
+                if (this.filters.issuingBody !== 'all') {
+                    filtered = filtered.filter(item => item.issuingBody === this.filters.issuingBody);
+                }
+                
+                // Sort results
+                if (this.sortBy === 'relevance') {
+                    filtered.sort((a, b) => b.relevance - a.relevance);
+                } else if (this.sortBy === 'date') {
+                    filtered.sort((a, b) => b.year - a.year);
+                } else if (this.sortBy === 'title') {
+                    filtered.sort((a, b) => a.title.localeCompare(b.title));
+                }
+                
+                this.currentResults = filtered;
+                this.totalResults = filtered.length;
+                this.currentPage = 1;
+            }
+            
+            renderResults() {
+                const startIndex = (this.currentPage - 1) * this.resultsPerPage;
+                const endIndex = startIndex + this.resultsPerPage;
+                const pageResults = this.currentResults.slice(startIndex, endIndex);
+                
+                this.resultsCount.textContent = `Tìm thấy ${this.totalResults} kết quả`;
+                
+                if (pageResults.length === 0) {
+                    this.resultsGrid.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: #6b7280;">
+                            <i data-lucide="search" class="w-12 h-12 mx-auto mb-4" style="opacity: 0.5;"></i>
+                            <p>Không tìm thấy kết quả nào phù hợp với tiêu chí tìm kiếm của bạn.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                this.resultsGrid.innerHTML = pageResults.map(result => `
+                    <div class="result-item" onclick="legalApp.viewDocument(${result.id})">
+                        <div class="result-header">
+                            <div>
+                                <h3 class="result-title">${result.title}</h3>
+                                <div class="result-meta">
+                                    <span class="result-type">${this.getDocumentTypeLabel(result.type)}</span>
+                                    <span>Năm ${result.year}</span>
+                                    <span>${this.getIssuingBodyLabel(result.issuingBody)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="result-content">
+                            ${result.content}
+                        </div>
+                        <div class="result-actions">
+                            <a href="#" class="result-action primary" onclick="event.stopPropagation(); legalApp.viewDocument(${result.id})">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                                Xem chi tiết
+                            </a>
+                            <a href="#" class="result-action" onclick="event.stopPropagation(); legalApp.downloadDocument(${result.id})">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                                Tải xuống
+                            </a>
+                            <a href="#" class="result-action" onclick="event.stopPropagation(); legalApp.shareDocument(${result.id})">
+                                <i data-lucide="share-2" class="w-4 h-4"></i>
+                                Chia sẻ
+                            </a>
+                            <a href="#" class="result-action" onclick="event.stopPropagation(); legalApp.bookmarkDocument(${result.id})">
+                                <i data-lucide="bookmark" class="w-4 h-4"></i>
+                                Lưu
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Re-initialize icons
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+            
+            renderPagination() {
+                const totalPages = Math.ceil(this.totalResults / this.resultsPerPage);
+                
+                if (totalPages <= 1) {
+                    this.pagination.innerHTML = '';
+                    return;
+                }
+                
+                let paginationHTML = '';
+                
+                // Previous button
+                paginationHTML += `
+                    <button class="pagination-button" ${this.currentPage === 1 ? 'disabled' : ''} 
+                            onclick="legalApp.goToPage(${this.currentPage - 1})">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    </button>
+                `;
+                
+                // Page numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || (i >= this.currentPage - 2 && i <= this.currentPage + 2)) {
+                        paginationHTML += `
+                            <button class="pagination-button ${i === this.currentPage ? 'active' : ''}" 
+                                    onclick="legalApp.goToPage(${i})">
+                                ${i}
+                            </button>
+                        `;
+                    } else if (i === this.currentPage - 3 || i === this.currentPage + 3) {
+                        paginationHTML += '<span class="pagination-button" style="border: none; cursor: default;">...</span>';
+                    }
+                }
+                
+                // Next button
+                paginationHTML += `
+                    <button class="pagination-button" ${this.currentPage === totalPages ? 'disabled' : ''} 
+                            onclick="legalApp.goToPage(${this.currentPage + 1})">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                `;
+                
+                this.pagination.innerHTML = paginationHTML;
+                
+                // Re-initialize icons
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+            
+            goToPage(page) {
+                if (page < 1 || page > Math.ceil(this.totalResults / this.resultsPerPage)) return;
+                
+                this.currentPage = page;
+                this.renderResults();
+                this.renderPagination();
+                
+                // Scroll to top of results
+                this.resultsGrid.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            getDocumentTypeLabel(type) {
+                const labels = {
+                    'law': 'Luật',
+                    'decree': 'Nghị định',
+                    'circular': 'Thông tư',
+                    'decision': 'Quyết định',
+                    'directive': 'Chỉ thị'
+                };
+                return labels[type] || type;
+            }
+            
+            getIssuingBodyLabel(body) {
+                const labels = {
+                    'quoc-hoi': 'Quốc hội',
+                    'chinh-phu': 'Chính phủ',
+                    'bo-nganh': 'Bộ, ngành',
+                    'ubnd': 'UBND'
+                };
+                return labels[body] || body;
+            }
+            
+            viewDocument(id) {
+                const document = this.currentResults.find(doc => doc.id === id);
+                if (document) {
+                    alert(`Xem chi tiết: ${document.title}`);
+                    // Here you would navigate to document detail page
+                }
+            }
+            
+            downloadDocument(id) {
+                const document = this.currentResults.find(doc => doc.id === id);
+                if (document) {
+                    alert(`Tải xuống: ${document.title}`);
+                    // Here you would implement download functionality
+                }
+            }
+            
+            shareDocument(id) {
+                const document = this.currentResults.find(doc => doc.id === id);
+                if (document) {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: document.title,
+                            text: document.content,
+                            url: window.location.href
+                        });
+                    } else {
+                        navigator.clipboard.writeText(document.title);
+                        alert('Đã sao chép để chia sẻ');
+                    }
+                }
+            }
+            
+            bookmarkDocument(id) {
+                const document = this.currentResults.find(doc => doc.id === id);
+                if (document) {
+                    // Save to bookmarks
+                    const bookmarks = JSON.parse(localStorage.getItem('vilaw_bookmarks') || '[]');
+                    if (!bookmarks.find(b => b.id === id)) {
+                        bookmarks.push(document);
+                        localStorage.setItem('vilaw_bookmarks', JSON.stringify(bookmarks));
+                        alert('Đã lưu vào danh sách yêu thích');
+                    } else {
+                        alert('Văn bản đã có trong danh sách yêu thích');
+                    }
+                }
+            }
+        }
+        
+        // Initialize legal search app
+        let legalApp;
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            legalApp = new LegalSearchApp();
+        });
+    </script>
+</body>
+</html>

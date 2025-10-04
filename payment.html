@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán - ViLaw</title>
+    <meta name="description" content="Thanh toán gói dịch vụ ViLaw - Nền tảng pháp lý AI">
+    
+    <!-- CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- ViLaw Core Scripts -->
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+    <script src="payment.js"></script>
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #76BA53;
+            --accent: #76819B;
+            --dark: #19253F;
+            --muted: #9B9CAA;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --primary-rgba-08: rgba(118, 186, 83, 0.08);
+            --accent-rgba-08: rgba(118, 129, 155, 0.08);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Payment Steps */
+        .payment-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 0 1rem;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .step.active .step-number {
+            background: var(--primary);
+        }
+
+        .step.completed .step-number {
+            background: var(--success);
+        }
+
+        .step-text {
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .payment-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        /* Plan Selection */
+        .plan-selection {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .plans-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .plan-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .plan-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .plan-card.selected {
+            border-color: var(--primary);
+            background: rgba(118, 186, 83, 0.1);
+        }
+
+        .plan-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .plan-features {
+            list-style: none;
+        }
+
+        .plan-features li {
+            padding: 0.25rem 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .plan-features li::before {
+            content: '✓';
+            color: var(--primary);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .payment-methods-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .payment-method {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary);
+        }
+
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: rgba(118, 186, 83, 0.1);
+        }
+
+        .payment-method-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .payment-method-info {
+            flex: 1;
+        }
+
+        .payment-method-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .payment-method-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Billing Information */
+        .billing-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin-top: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            color: #333;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .summary-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .summary-label {
+            color: #666;
+        }
+
+        .summary-value {
+            font-weight: 500;
+        }
+
+        .summary-total {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #68a547;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Payment Processing */
+        .payment-processing {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .processing-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .payment-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-steps {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .step {
+                margin: 0;
+            }
+        }
+
+        /* Success/Error Messages */
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .message.success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        .message.warning {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid var(--warning);
+            color: var(--warning);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">ViLaw</div>
+            <div class="tagline">Thanh toán gói dịch vụ</div>
+        </div>
+
+        <!-- Payment Steps -->
+        <div class="payment-steps">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                <div class="step-text">Chọn gói</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div class="step-text">Phương thức thanh toán</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div class="step-text">Xác nhận</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="payment-content">
+            <div class="payment-left">
+                <!-- Plan Selection -->
+                <div class="plan-selection" id="planSelection">
+                    <h2 class="section-title">Chọn gói dịch vụ</h2>
+                    <div class="plans-grid" id="plansGrid">
+                        <!-- Plans will be loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="payment-methods" id="paymentMethods" style="display: none;">
+                    <h2 class="section-title">Phương thức thanh toán</h2>
+                    <div class="payment-methods-grid" id="paymentMethodsGrid">
+                        <!-- Payment methods will be loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Billing Information -->
+                <div class="billing-info" id="billingInfo" style="display: none;">
+                    <h2 class="section-title">Thông tin thanh toán</h2>
+                    <form id="billingForm">
+                        <div class="form-group">
+                            <label class="form-label" for="fullName">Họ và tên *</label>
+                            <input type="text" id="fullName" class="form-input" placeholder="Nhập họ và tên" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email *</label>
+                            <input type="email" id="email" class="form-input" placeholder="Nhập email" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="phone">Số điện thoại *</label>
+                            <input type="tel" id="phone" class="form-input" placeholder="Nhập số điện thoại" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="address">Địa chỉ</label>
+                            <input type="text" id="address" class="form-input" placeholder="Nhập địa chỉ">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="company">Công ty/Tổ chức</label>
+                            <input type="text" id="company" class="form-input" placeholder="Nhập tên công ty">
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Payment Processing -->
+                <div class="payment-processing" id="paymentProcessing" style="display: none;">
+                    <div class="processing-spinner"></div>
+                    <h3>Đang xử lý thanh toán...</h3>
+                    <p>Vui lòng không đóng trang này</p>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary" id="orderSummary">
+                <h2 class="summary-title">Tóm tắt đơn hàng</h2>
+                <div class="summary-item">
+                    <span class="summary-label">Gói dịch vụ:</span>
+                    <span class="summary-value" id="selectedPlanName">Chưa chọn</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Giá gốc:</span>
+                    <span class="summary-value" id="planPrice">0 VND</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Thuế VAT (10%):</span>
+                    <span class="summary-value" id="taxAmount">0 VND</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Phí xử lý (3%):</span>
+                    <span class="summary-value" id="processingFee">0 VND</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Tổng cộng:</span>
+                    <span class="summary-value summary-total" id="totalAmount">0 VND</span>
+                </div>
+                
+                <button class="btn btn-primary" id="proceedPayment" style="width: 100%; margin-top: 1.5rem;" disabled>
+                    Tiến hành thanh toán
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            
+            // Initialize payment system
+            initializePayment();
+        });
+
+        let selectedPlan = null;
+        let selectedPaymentMethod = null;
+        let currentStep = 1;
+
+        function initializePayment() {
+            console.log('Initializing payment system...');
+            
+            // Load plans
+            loadPlans();
+            
+            // Load payment methods
+            loadPaymentMethods();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            console.log('Payment system initialized');
+        }
+
+        function loadPlans() {
+            const plansGrid = document.getElementById('plansGrid');
+            const pricing = window.paymentSystem.pricing.plans;
+            
+            Object.values(pricing).forEach(plan => {
+                const planCard = document.createElement('div');
+                planCard.className = 'plan-card';
+                planCard.dataset.planId = plan.id;
+                
+                planCard.innerHTML = `
+                    <div class="plan-name">${plan.name}</div>
+                    <div class="plan-price">${formatCurrency(plan.price)} ${plan.period ? '/' + plan.period : ''}</div>
+                    <ul class="plan-features">
+                        ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                `;
+                
+                planCard.addEventListener('click', () => selectPlan(plan));
+                plansGrid.appendChild(planCard);
+            });
+        }
+
+        function loadPaymentMethods() {
+            const paymentMethodsGrid = document.getElementById('paymentMethodsGrid');
+            const paymentMethods = window.paymentSystem.paymentMethods;
+            
+            paymentMethods.forEach(method => {
+                const methodCard = document.createElement('div');
+                methodCard.className = 'payment-method';
+                methodCard.dataset.methodId = method.id;
+                
+                methodCard.innerHTML = `
+                    <div class="payment-method-icon">
+                        <i data-lucide="${method.icon}"></i>
+                    </div>
+                    <div class="payment-method-info">
+                        <div class="payment-method-name">${method.name}</div>
+                        <div class="payment-method-desc">${getPaymentMethodDescription(method)}</div>
+                    </div>
+                `;
+                
+                methodCard.addEventListener('click', () => selectPaymentMethod(method));
+                paymentMethodsGrid.appendChild(methodCard);
+            });
+        }
+
+        function getPaymentMethodDescription(method) {
+            const descriptions = {
+                'vnpay': 'Thanh toán qua VNPay',
+                'momo': 'Ví điện tử MoMo',
+                'zalopay': 'Ví điện tử ZaloPay',
+                'bank_transfer': 'Chuyển khoản ngân hàng',
+                'credit_card': 'Thẻ tín dụng/ghi nợ'
+            };
+            return descriptions[method.id] || method.name;
+        }
+
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            
+            // Update UI
+            document.querySelectorAll('.plan-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-plan-id="${plan.id}"]`).classList.add('selected');
+            
+            // Update order summary
+            updateOrderSummary();
+            
+            // Show payment methods
+            document.getElementById('paymentMethods').style.display = 'block';
+            updateStep(2);
+        }
+
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+            
+            // Update UI
+            document.querySelectorAll('.payment-method').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-method-id="${method.id}"]`).classList.add('selected');
+            
+            // Show billing info
+            document.getElementById('billingInfo').style.display = 'block';
+            updateStep(3);
+            
+            // Enable proceed button
+            document.getElementById('proceedPayment').disabled = false;
+        }
+
+        function updateOrderSummary() {
+            if (!selectedPlan) return;
+            
+            const tax = window.paymentSystem.calculateTax(selectedPlan.price);
+            const processingFee = window.paymentSystem.calculateProcessingFee(selectedPlan.price);
+            const total = window.paymentSystem.calculateTotal(selectedPlan.price);
+            
+            document.getElementById('selectedPlanName').textContent = selectedPlan.name;
+            document.getElementById('planPrice').textContent = formatCurrency(selectedPlan.price);
+            document.getElementById('taxAmount').textContent = formatCurrency(tax);
+            document.getElementById('processingFee').textContent = formatCurrency(processingFee);
+            document.getElementById('totalAmount').textContent = formatCurrency(total);
+        }
+
+        function updateStep(step) {
+            // Update step indicators
+            for (let i = 1; i <= 3; i++) {
+                const stepElement = document.getElementById(`step${i}`);
+                if (i < step) {
+                    stepElement.classList.add('completed');
+                    stepElement.classList.remove('active');
+                } else if (i === step) {
+                    stepElement.classList.add('active');
+                    stepElement.classList.remove('completed');
+                } else {
+                    stepElement.classList.remove('active', 'completed');
+                }
+            }
+            
+            currentStep = step;
+        }
+
+        function setupEventListeners() {
+            // Proceed payment button
+            document.getElementById('proceedPayment').addEventListener('click', processPayment);
+            
+            // Form validation
+            document.getElementById('billingForm').addEventListener('input', validateForm);
+        }
+
+        function validateForm() {
+            const form = document.getElementById('billingForm');
+            const inputs = form.querySelectorAll('input[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                }
+            });
+            
+            document.getElementById('proceedPayment').disabled = !isValid || !selectedPlan || !selectedPaymentMethod;
+        }
+
+        async function processPayment() {
+            if (!selectedPlan || !selectedPaymentMethod) {
+                showMessage('Vui lòng chọn gói dịch vụ và phương thức thanh toán', 'error');
+                return;
+            }
+            
+            // Validate form
+            const form = document.getElementById('billingForm');
+            if (!form.checkValidity()) {
+                showMessage('Vui lòng điền đầy đủ thông tin bắt buộc', 'error');
+                return;
+            }
+            
+            try {
+                // Show processing
+                showPaymentProcessing();
+                
+                // Get billing info
+                const billingInfo = {
+                    fullName: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value,
+                    company: document.getElementById('company').value
+                };
+                
+                // Create subscription
+                const subscription = window.paymentSystem.createSubscription(
+                    'user_' + Date.now(), // Simulate user ID
+                    selectedPlan.id,
+                    selectedPaymentMethod.id,
+                    billingInfo
+                );
+                
+                // Create invoice
+                const invoice = window.paymentSystem.createInvoice(subscription.id);
+                
+                // Create transaction
+                const transaction = window.paymentSystem.createTransaction(
+                    invoice.id,
+                    selectedPaymentMethod.id,
+                    invoice.total,
+                    invoice.currency
+                );
+                
+                // Process payment based on method
+                let paymentResult;
+                switch (selectedPaymentMethod.id) {
+                    case 'vnpay':
+                        paymentResult = await processVNPayPayment(transaction.id);
+                        break;
+                    case 'momo':
+                        paymentResult = await processMoMoPayment(transaction.id);
+                        break;
+                    case 'zalopay':
+                        paymentResult = await processZaloPayPayment(transaction.id);
+                        break;
+                    default:
+                        paymentResult = await processGenericPayment(transaction.id);
+                }
+                
+                if (paymentResult.success) {
+                    showMessage('Thanh toán thành công! Bạn sẽ được chuyển hướng...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else {
+                    showMessage('Thanh toán thất bại. Vui lòng thử lại.', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Payment error:', error);
+                showMessage('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+            } finally {
+                hidePaymentProcessing();
+            }
+        }
+
+        async function processVNPayPayment(transactionId) {
+            const paymentData = await window.paymentSystem.processVNPayPayment(transactionId);
+            
+            // In a real implementation, you would redirect to VNPay
+            // For demo, we'll simulate success
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({ success: true, transactionId });
+                }, 2000);
+            });
+        }
+
+        async function processMoMoPayment(transactionId) {
+            const paymentData = await window.paymentSystem.processMoMoPayment(transactionId);
+            
+            // In a real implementation, you would redirect to MoMo
+            // For demo, we'll simulate success
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({ success: true, transactionId });
+                }, 2000);
+            });
+        }
+
+        async function processZaloPayPayment(transactionId) {
+            const paymentData = await window.paymentSystem.processZaloPayPayment(transactionId);
+            
+            // In a real implementation, you would redirect to ZaloPay
+            // For demo, we'll simulate success
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({ success: true, transactionId });
+                }, 2000);
+            });
+        }
+
+        async function processGenericPayment(transactionId) {
+            // Simulate generic payment processing
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({ success: true, transactionId });
+                }, 2000);
+            });
+        }
+
+        function showPaymentProcessing() {
+            document.getElementById('planSelection').style.display = 'none';
+            document.getElementById('paymentMethods').style.display = 'none';
+            document.getElementById('billingInfo').style.display = 'none';
+            document.getElementById('paymentProcessing').style.display = 'block';
+        }
+
+        function hidePaymentProcessing() {
+            document.getElementById('paymentProcessing').style.display = 'none';
+        }
+
+        function showMessage(message, type = 'info') {
+            // Remove existing messages
+            document.querySelectorAll('.message').forEach(msg => msg.remove());
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            
+            document.querySelector('.payment-content').insertBefore(messageDiv, document.querySelector('.payment-content').firstChild);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        function formatCurrency(amount, currency = 'VND') {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: currency
+            }).format(amount);
+        }
+    </script>
+</body>
+</html>

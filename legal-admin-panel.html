@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Quản lý Dữ liệu Pháp luật - ViLaw</title>
+    <meta name="description" content="Panel quản lý và cập nhật dữ liệu pháp luật Việt Nam cho AI ViLaw.">
+    
+    <!-- CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #76BA53;
+            --accent: #76819B;
+            --dark: #19253F;
+            --muted: #9B9CAA;
+            --primary-rgba-08: rgba(118, 186, 83, 0.08);
+            --accent-rgba-08: rgba(118, 129, 155, 0.08);
+            --primary-rgba-18: rgba(118, 186, 83, 0.18);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #EFF2F0;
+            color: #19253F;
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--primary-rgba-18);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.5);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #68a547;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+
+        /* Admin Grid */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .admin-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .admin-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+        }
+
+        .admin-card.large {
+            grid-column: span 2;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .card-action {
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .card-action:hover {
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive {
+            color: #10b981;
+        }
+
+        .stat-change.negative {
+            color: #ef4444;
+        }
+
+        .stat-change.neutral {
+            color: #6b7280;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .control-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .control-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .control-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .control-description {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .control-button {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .control-button:hover {
+            background-color: #68a547;
+        }
+
+        .control-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Data Table */
+        .data-table {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .table-filters {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .table td {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .table tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.inactive {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-badge.pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-badge.processing {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-card.large {
+                grid-column: span 1;
+            }
+
+            .control-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <img src="assets/logo.jpg" alt="ViLaw">
+                    </div>
+                </a>
+
+                <nav class="nav">
+                    <a href="legal.html" class="nav-link">Văn bản</a>
+                    <a href="chat.html" class="nav-link">Chat AI</a>
+                    <a href="documents.html" class="nav-link">Soạn thảo</a>
+                    <a href="contract.html" class="nav-link">Hợp đồng</a>
+                    <a href="dashboard.html" class="nav-link">Admin</a>
+                </nav>
+
+                <div>
+                    <a href="loginuser.html" class="btn btn-primary">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        Đăng nhập
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Panel Quản lý Dữ liệu Pháp luật</h1>
+                <p class="page-subtitle">
+                    Quản lý và cập nhật toàn bộ hệ thống dữ liệu pháp luật Việt Nam
+                </p>
+            </div>
+
+            <!-- Admin Stats -->
+            <div class="admin-grid">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Tổng văn bản</h3>
+                        <i data-lucide="file-text" class="w-5 h-5 text-primary"></i>
+                    </div>
+                    <div class="stat-value" id="totalDocuments">156,789</div>
+                    <div class="stat-label">Văn bản pháp luật</div>
+                    <div class="stat-change positive">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        +2.3% tuần này
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3 class="card-title">AI Accuracy</h3>
+                        <i data-lucide="brain" class="w-5 h-5 text-green-500"></i>
+                    </div>
+                    <div class="stat-value" id="aiAccuracy">98.5%</div>
+                    <div class="stat-label">Độ chính xác</div>
+                    <div class="stat-change positive">
+                        <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        +0.3% so với tuần trước
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Nguồn dữ liệu</h3>
+                        <i data-lucide="database" class="w-5 h-5 text-blue-500"></i>
+                    </div>
+                    <div class="stat-value" id="dataSources">24</div>
+                    <div class="stat-label">Nguồn hoạt động</div>
+                    <div class="stat-change neutral">
+                        <i data-lucide="minus" class="w-4 h-4"></i>
+                        Không thay đổi
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="card-header">
+                    <h3 class="card-title">Điều khiển Hệ thống</h3>
+                </div>
+
+                <div class="control-grid">
+                    <div class="control-item">
+                        <div class="control-icon">
+                            <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="control-title">Cập nhật Dữ liệu</h4>
+                        <p class="control-description">Crawl và cập nhật tất cả văn bản pháp luật từ các nguồn chính thức</p>
+                        <button class="control-button" onclick="adminPanel.startDataUpdate()">
+                            Bắt đầu Cập nhật
+                        </button>
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-icon">
+                            <i data-lucide="brain" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="control-title">Training AI</h4>
+                        <p class="control-description">Training lại AI model với dữ liệu pháp luật mới nhất</p>
+                        <button class="control-button" onclick="adminPanel.startAITraining()">
+                            Bắt đầu Training
+                        </button>
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-icon">
+                            <i data-lucide="database" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="control-title">Quản lý Dữ liệu</h4>
+                        <p class="control-description">Xem và quản lý toàn bộ dữ liệu pháp luật trong hệ thống</p>
+                        <button class="control-button" onclick="adminPanel.manageData()">
+                            Quản lý Dữ liệu
+                        </button>
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-icon">
+                            <i data-lucide="settings" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="control-title">Cấu hình Hệ thống</h4>
+                        <p class="control-description">Cấu hình các tham số và thiết lập hệ thống</p>
+                        <button class="control-button" onclick="adminPanel.configureSystem()">
+                            Cấu hình
+                        </button>
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-icon">
+                            <i data-lucide="download" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="control-title">Xuất Báo cáo</h4>
+                        <p class="control-description">Tạo và xuất báo cáo thống kê hệ thống</p>
+                        <button class="control-button" onclick="adminPanel.exportReport()">
+                            Xuất Báo cáo
+                        </button>
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-icon">
+                            <i data-lucide="monitor" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="control-title">Giám sát Hệ thống</h4>
+                        <p class="control-description">Theo dõi trạng thái và hiệu suất hệ thống</p>
+                        <button class="control-button" onclick="adminPanel.monitorSystem()">
+                            Giám sát
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Management Table -->
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">Quản lý Dữ liệu Pháp luật</h3>
+                    <div class="table-filters">
+                        <select class="filter-select" id="statusFilter">
+                            <option value="all">Tất cả trạng thái</option>
+                            <option value="active">Hoạt động</option>
+                            <option value="inactive">Không hoạt động</option>
+                            <option value="pending">Chờ xử lý</option>
+                        </select>
+                        <select class="filter-select" id="sourceFilter">
+                            <option value="all">Tất cả nguồn</option>
+                            <option value="chinhphu">Chính phủ</option>
+                            <option value="quochoi">Quốc hội</option>
+                            <option value="botuphap">Bộ Tư pháp</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tên văn bản</th>
+                                <th>Loại</th>
+                                <th>Nguồn</th>
+                                <th>Ngày cập nhật</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                            <!-- Table content will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Admin Panel functionality
+        class AdminPanel {
+            constructor() {
+                this.isUpdating = false;
+                this.isTraining = false;
+                this.systemStatus = {
+                    totalDocuments: 156789,
+                    aiAccuracy: 98.5,
+                    dataSources: 24,
+                    lastUpdate: new Date().toISOString()
+                };
+                
+                this.initializeElements();
+                this.bindEvents();
+                this.loadData();
+            }
+            
+            initializeElements() {
+                this.dataTableBody = document.getElementById('dataTableBody');
+                this.statusFilter = document.getElementById('statusFilter');
+                this.sourceFilter = document.getElementById('sourceFilter');
+            }
+            
+            bindEvents() {
+                this.statusFilter.addEventListener('change', () => this.filterTable());
+                this.sourceFilter.addEventListener('change', () => this.filterTable());
+            }
+            
+            loadData() {
+                this.loadDataTable();
+                this.updateStats();
+            }
+            
+            loadDataTable() {
+                const sampleData = [
+                    {
+                        name: 'Luật Doanh nghiệp 2020',
+                        type: 'Luật',
+                        source: 'Quốc hội',
+                        date: '15/11/2024',
+                        status: 'active'
+                    },
+                    {
+                        name: 'Nghị định 15/2020/NĐ-CP',
+                        type: 'Nghị định',
+                        source: 'Chính phủ',
+                        date: '15/11/2024',
+                        status: 'active'
+                    },
+                    {
+                        name: 'Thông tư 78/2021/TT-BTC',
+                        type: 'Thông tư',
+                        source: 'Bộ Tư pháp',
+                        date: '14/11/2024',
+                        status: 'pending'
+                    },
+                    {
+                        name: 'Quyết định 15/2020/QĐ-TTg',
+                        type: 'Quyết định',
+                        source: 'Chính phủ',
+                        date: '14/11/2024',
+                        status: 'inactive'
+                    }
+                ];
+                
+                this.renderDataTable(sampleData);
+            }
+            
+            renderDataTable(data) {
+                this.dataTableBody.innerHTML = data.map(item => `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.type}</td>
+                        <td>${item.source}</td>
+                        <td>${item.date}</td>
+                        <td><span class="status-badge ${item.status}">${this.getStatusText(item.status)}</span></td>
+                        <td>
+                            <button class="btn btn-secondary" onclick="adminPanel.viewDocument('${item.name}')">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                // Re-initialize icons
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+            
+            getStatusText(status) {
+                const texts = {
+                    'active': 'Hoạt động',
+                    'inactive': 'Không hoạt động',
+                    'pending': 'Chờ xử lý'
+                };
+                return texts[status] || status;
+            }
+            
+            updateStats() {
+                document.getElementById('totalDocuments').textContent = this.systemStatus.totalDocuments.toLocaleString();
+                document.getElementById('aiAccuracy').textContent = this.systemStatus.aiAccuracy + '%';
+                document.getElementById('dataSources').textContent = this.systemStatus.dataSources;
+            }
+            
+            async startDataUpdate() {
+                if (this.isUpdating) {
+                    alert('Hệ thống đang cập nhật dữ liệu');
+                    return;
+                }
+                
+                this.isUpdating = true;
+                alert('Bắt đầu cập nhật dữ liệu pháp luật...');
+                
+                try {
+                    // Simulate data update
+                    await this.simulateDataUpdate();
+                    alert('Cập nhật dữ liệu hoàn thành!');
+                } catch (error) {
+                    alert('Lỗi khi cập nhật dữ liệu: ' + error.message);
+                } finally {
+                    this.isUpdating = false;
+                }
+            }
+            
+            async simulateDataUpdate() {
+                // Simulate update process
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                this.systemStatus.totalDocuments += Math.floor(Math.random() * 100);
+                this.updateStats();
+            }
+            
+            async startAITraining() {
+                if (this.isTraining) {
+                    alert('AI đang được training');
+                    return;
+                }
+                
+                this.isTraining = true;
+                alert('Bắt đầu training AI...');
+                
+                try {
+                    // Simulate AI training
+                    await this.simulateAITraining();
+                    alert('Training AI hoàn thành!');
+                } catch (error) {
+                    alert('Lỗi khi training AI: ' + error.message);
+                } finally {
+                    this.isTraining = false;
+                }
+            }
+            
+            async simulateAITraining() {
+                // Simulate training process
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                this.systemStatus.aiAccuracy += 0.1;
+                this.updateStats();
+            }
+            
+            manageData() {
+                alert('Chức năng quản lý dữ liệu sẽ được triển khai');
+            }
+            
+            configureSystem() {
+                alert('Chức năng cấu hình hệ thống sẽ được triển khai');
+            }
+            
+            exportReport() {
+                const report = this.generateReport();
+                const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'legal_data_report.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+            
+            generateReport() {
+                let report = `BÁO CÁO HỆ THỐNG DỮ LIỆU PHÁP LUẬT VILAW\n`;
+                report += `==========================================\n\n`;
+                report += `Thống kê tổng quan:\n`;
+                report += `- Tổng văn bản: ${this.systemStatus.totalDocuments.toLocaleString()}\n`;
+                report += `- Độ chính xác AI: ${this.systemStatus.aiAccuracy}%\n`;
+                report += `- Nguồn dữ liệu: ${this.systemStatus.dataSources}\n`;
+                report += `- Cập nhật cuối: ${new Date(this.systemStatus.lastUpdate).toLocaleString('vi-VN')}\n\n`;
+                
+                report += `Trạng thái hệ thống:\n`;
+                report += `- Cập nhật dữ liệu: ${this.isUpdating ? 'Đang chạy' : 'Sẵn sàng'}\n`;
+                report += `- Training AI: ${this.isTraining ? 'Đang chạy' : 'Sẵn sàng'}\n`;
+                
+                return report;
+            }
+            
+            monitorSystem() {
+                alert('Chức năng giám sát hệ thống sẽ được triển khai');
+            }
+            
+            viewDocument(documentName) {
+                alert(`Xem chi tiết văn bản: ${documentName}`);
+            }
+            
+            filterTable() {
+                // Implement table filtering
+                this.loadDataTable();
+            }
+        }
+        
+        // Initialize admin panel
+        let adminPanel;
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            adminPanel = new AdminPanel();
+        });
+    </script>
+</body>
+</html>

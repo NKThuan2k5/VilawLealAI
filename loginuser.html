@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - ViLaw</title>
+    <meta name="description" content="Đăng nhập vào hệ thống ViLaw để sử dụng các tính năng AI pháp lý.">
+    
+    <!-- CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #76BA53;
+            --accent: #76819B;
+            --dark: #19253F;
+            --muted: #9B9CAA;
+            --primary-rgba-08: rgba(118, 186, 83, 0.08);
+            --accent-rgba-08: rgba(118, 129, 155, 0.08);
+            --primary-rgba-18: rgba(118, 186, 83, 0.18);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #EFF2F0;
+            color: #19253F;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e5e7eb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--primary-rgba-18);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.5);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #68a547;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* Login Container */
+        .login-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            padding: 2rem 0;
+        }
+
+        @media (min-width: 1024px) {
+            .login-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Login Form */
+        .login-form-container {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-input {
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(118, 186, 83, 0.1);
+        }
+
+        .form-input.error {
+            border-color: #ef4444;
+        }
+
+        .form-error {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox {
+            width: 1rem;
+            height: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .login-button:hover {
+            background-color: #68a547;
+        }
+
+        .login-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: #e5e7eb;
+        }
+
+        .divider span {
+            padding: 0 1rem;
+        }
+
+        .social-login {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .social-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background: white;
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .social-button:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .register-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Login Info */
+        .login-info {
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            .login-info {
+                display: block;
+                padding: 2rem;
+            }
+        }
+
+        .info-content {
+            max-width: 400px;
+        }
+
+        .info-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .info-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+
+        .info-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .info-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        .info-features li i {
+            color: var(--primary);
+        }
+
+        .info-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .info-stat {
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        /* Loading State */
+        .loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid #e5e7eb;
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success State */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            background-color: #d1fae5;
+            color: #065f46;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        /* Error State */
+        .error-message {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .login-title {
+                font-size: 1.75rem;
+            }
+
+            .info-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <img src="assets/logo.jpg" alt="ViLaw">
+                    </div>
+                </a>
+
+                <nav class="nav">
+                    <a href="legal.html" class="nav-link">Văn bản</a>
+                    <a href="chat.html" class="nav-link">Chat AI</a>
+                    <a href="documents.html" class="nav-link">Soạn thảo</a>
+                    <a href="contract.html" class="nav-link">Hợp đồng</a>
+                    <a href="dashboard.html" class="nav-link">Admin</a>
+                </nav>
+
+                <div>
+                    <a href="index.html" class="btn btn-secondary">
+                        <i data-lucide="home" class="w-4 h-4"></i>
+                        Trang chủ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="login-container">
+            <!-- Login Form -->
+            <div class="login-form-container">
+                <div class="login-header">
+                    <h1 class="login-title">Đăng nhập</h1>
+                    <p class="login-subtitle">Chào mừng bạn quay trở lại ViLaw</p>
+                </div>
+
+                <!-- Success Message -->
+                <div class="success-message" id="successMessage">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    Đăng nhập thành công! Đang chuyển hướng...
+                </div>
+
+                <!-- Error Message -->
+                <div class="error-message" id="errorMessage">
+                    <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                    <span id="errorText">Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.</span>
+                </div>
+
+                <form class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            class="form-input" 
+                            placeholder="Nhập email của bạn"
+                            required
+                        >
+                        <div class="form-error" id="emailError"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Mật khẩu</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            class="form-input" 
+                            placeholder="Nhập mật khẩu"
+                            required
+                        >
+                        <div class="form-error" id="passwordError"></div>
+                    </div>
+
+                    <div class="form-options">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="rememberMe" class="checkbox">
+                            <label for="rememberMe" class="checkbox-label">Ghi nhớ đăng nhập</label>
+                        </div>
+                        <a href="#" class="forgot-password">Quên mật khẩu?</a>
+                    </div>
+
+                    <button type="submit" class="login-button" id="loginButton">
+                        <span class="login-text">Đăng nhập</span>
+                        <div class="loading" id="loginLoading">
+                            <div class="spinner"></div>
+                            Đang đăng nhập...
+                        </div>
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>Hoặc</span>
+                </div>
+
+                <div class="social-login">
+                    <a href="#" class="social-button" onclick="loginApp.loginWithGoogle()">
+                        <i data-lucide="chrome" class="w-5 h-5"></i>
+                        Đăng nhập với Google
+                    </a>
+                    <a href="#" class="social-button" onclick="loginApp.loginWithFacebook()">
+                        <i data-lucide="facebook" class="w-5 h-5"></i>
+                        Đăng nhập với Facebook
+                    </a>
+                </div>
+
+                <div class="register-link">
+                    Chưa có tài khoản? <a href="#" onclick="loginApp.showRegister()">Đăng ký ngay</a>
+                </div>
+            </div>
+
+            <!-- Login Info -->
+            <div class="login-info">
+                <div class="info-content">
+                    <h2 class="info-title">
+                        Nền tảng Pháp lý Số<br>
+                        <span style="color: var(--primary);">Toàn Dân</span>
+                    </h2>
+                    <p class="info-subtitle">
+                        Mỗi công dân – Một trợ lý pháp lý AI
+                    </p>
+
+                    <ul class="info-features">
+                        <li>
+                            <i data-lucide="check" class="w-5 h-5"></i>
+                            <span>Chat AI pháp lý 24/7</span>
+                        </li>
+                        <li>
+                            <i data-lucide="check" class="w-5 h-5"></i>
+                            <span>Soạn thảo văn bản tự động</span>
+                        </li>
+                        <li>
+                            <i data-lucide="check" class="w-5 h-5"></i>
+                            <span>Phân tích hợp đồng thông minh</span>
+                        </li>
+                        <li>
+                            <i data-lucide="check" class="w-5 h-5"></i>
+                            <span>Tra cứu pháp luật nhanh chóng</span>
+                        </li>
+                    </ul>
+
+                    <div class="info-stats">
+                        <div class="info-stat">
+                            <div class="info-stat-value">12K+</div>
+                            <div class="info-stat-label">Người dùng</div>
+                        </div>
+                        <div class="info-stat">
+                            <div class="info-stat-value">50K+</div>
+                            <div class="info-stat-label">Văn bản</div>
+                        </div>
+                        <div class="info-stat">
+                            <div class="info-stat-value">8K+</div>
+                            <div class="info-stat-label">Cuộc chat</div>
+                        </div>
+                        <div class="info-stat">
+                            <div class="info-stat-value">99.9%</div>
+                            <div class="info-stat-label">Uptime</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Login functionality
+        class LoginApp {
+            constructor() {
+                this.initializeElements();
+                this.bindEvents();
+                this.checkExistingLogin();
+            }
+            
+            initializeElements() {
+                this.loginForm = document.getElementById('loginForm');
+                this.emailInput = document.getElementById('email');
+                this.passwordInput = document.getElementById('password');
+                this.loginButton = document.getElementById('loginButton');
+                this.loginText = document.querySelector('.login-text');
+                this.loginLoading = document.getElementById('loginLoading');
+                this.successMessage = document.getElementById('successMessage');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.errorText = document.getElementById('errorText');
+                this.emailError = document.getElementById('emailError');
+                this.passwordError = document.getElementById('passwordError');
+            }
+            
+            bindEvents() {
+                this.loginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+                
+                // Clear errors on input
+                this.emailInput.addEventListener('input', () => {
+                    this.clearError(this.emailInput, this.emailError);
+                });
+                
+                this.passwordInput.addEventListener('input', () => {
+                    this.clearError(this.passwordInput, this.passwordError);
+                });
+            }
+            
+            checkExistingLogin() {
+                const user = localStorage.getItem('vilaw_user');
+                if (user) {
+                    // User is already logged in, redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                }
+            }
+            
+            async handleLogin() {
+                const email = this.emailInput.value.trim();
+                const password = this.passwordInput.value.trim();
+                
+                // Validate inputs
+                if (!this.validateInputs(email, password)) {
+                    return;
+                }
+                
+                this.showLoading();
+                this.hideMessages();
+                
+                try {
+                    // Simulate API call
+                    await this.simulateLogin(email, password);
+                    
+                    // Login successful
+                    this.showSuccess();
+                    this.saveUserData(email);
+                    
+                    // Redirect after delay
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                    
+                } catch (error) {
+                    this.showError(error.message);
+                } finally {
+                    this.hideLoading();
+                }
+            }
+            
+            validateInputs(email, password) {
+                let isValid = true;
+                
+                // Validate email
+                if (!email) {
+                    this.showFieldError(this.emailInput, this.emailError, 'Vui lòng nhập email');
+                    isValid = false;
+                } else if (!this.isValidEmail(email)) {
+                    this.showFieldError(this.emailInput, this.emailError, 'Email không hợp lệ');
+                    isValid = false;
+                }
+                
+                // Validate password
+                if (!password) {
+                    this.showFieldError(this.passwordInput, this.passwordError, 'Vui lòng nhập mật khẩu');
+                    isValid = false;
+                } else if (password.length < 6) {
+                    this.showFieldError(this.passwordInput, this.passwordError, 'Mật khẩu phải có ít nhất 6 ký tự');
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            showFieldError(input, errorElement, message) {
+                input.classList.add('error');
+                errorElement.textContent = message;
+            }
+            
+            clearError(input, errorElement) {
+                input.classList.remove('error');
+                errorElement.textContent = '';
+            }
+            
+            async simulateLogin(email, password) {
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Simulate login validation
+                const validCredentials = [
+                    { email: 'admin@vilaw.com', password: 'admin123' },
+                    { email: 'user@vilaw.com', password: 'user123' },
+                    { email: 'test@vilaw.com', password: 'test123' }
+                ];
+                
+                const isValid = validCredentials.some(cred => 
+                    cred.email === email && cred.password === password
+                );
+                
+                if (!isValid) {
+                    throw new Error('Email hoặc mật khẩu không đúng');
+                }
+            }
+            
+            showLoading() {
+                this.loginButton.disabled = true;
+                this.loginText.style.display = 'none';
+                this.loginLoading.classList.add('active');
+            }
+            
+            hideLoading() {
+                this.loginButton.disabled = false;
+                this.loginText.style.display = 'block';
+                this.loginLoading.classList.remove('active');
+            }
+            
+            showSuccess() {
+                this.successMessage.classList.add('active');
+                this.errorMessage.classList.remove('active');
+            }
+            
+            showError(message) {
+                this.errorText.textContent = message;
+                this.errorMessage.classList.add('active');
+                this.successMessage.classList.remove('active');
+            }
+            
+            hideMessages() {
+                this.successMessage.classList.remove('active');
+                this.errorMessage.classList.remove('active');
+            }
+            
+            saveUserData(email) {
+                const userData = {
+                    email: email,
+                    name: email.split('@')[0],
+                    loginTime: new Date().toISOString(),
+                    isLoggedIn: true
+                };
+                
+                localStorage.setItem('vilaw_user', JSON.stringify(userData));
+            }
+            
+            loginWithGoogle() {
+                alert('Chức năng đăng nhập với Google sẽ được triển khai');
+            }
+            
+            loginWithFacebook() {
+                alert('Chức năng đăng nhập với Facebook sẽ được triển khai');
+            }
+            
+            showRegister() {
+                alert('Chức năng đăng ký sẽ được triển khai');
+            }
+        }
+        
+        // Initialize login app
+        let loginApp;
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            loginApp = new LoginApp();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViLaw - Nền tảng Hạ tầng Pháp lý Số Toàn Dân</title>
+    <meta name="description" content="Mỗi công dân – Một trợ lý pháp lý AI. Nền tảng pháp lý số toàn diện, tích hợp AI để hỗ trợ công dân, doanh nghiệp và cơ quan nhà nước.">
+    
+    <!-- CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Fix Colors -->
+    <link rel="stylesheet" href="fix-colors.css">
+    
+    <!-- Enhanced Styles -->
+    <link rel="stylesheet" href="enhanced-styles.css">
+    
+    <!-- ViLaw Core Scripts -->
+    <script src="vilaw-core.js"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+    <script src="legal-data.js"></script>
+    <script src="ai-chat.js"></script>
+    <script src="payment.js"></script>
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #76BA53;
+            --accent: #76819B;
+            --dark: #19253F;
+            --muted: #9B9CAA;
+            --primary-rgba-08: rgba(118, 186, 83, 0.08);
+            --accent-rgba-08: rgba(118, 129, 155, 0.08);
+            --primary-rgba-18: rgba(118, 186, 83, 0.18);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1e293b;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-20px) translateY(-10px); }
+            50% { transform: translateX(20px) translateY(10px); }
+            75% { transform: translateX(-10px) translateY(20px); }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.8s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--primary-rgba-18);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.5);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #68a547;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(118, 186, 83, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 5rem 0;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-title .gradient-text {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            max-width: 48rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        @media (min-width: 640px) {
+            .hero-cta {
+                flex-direction: row;
+            }
+        }
+
+        .btn-lg {
+            font-size: 1.125rem;
+            padding: 1rem 2rem;
+        }
+
+        /* Background Elements */
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        .blob {
+            position: absolute;
+            width: 18rem;
+            height: 18rem;
+            border-radius: 50%;
+            mix-blend-mode: multiply;
+            filter: blur(40px);
+            animation: blob 7s infinite;
+        }
+
+        .blob-1 {
+            top: 5rem;
+            left: 2.5rem;
+            background-color: var(--primary);
+            opacity: 0.5;
+        }
+
+        .blob-2 {
+            top: 10rem;
+            right: 2.5rem;
+            background-color: var(--accent);
+            opacity: 0.5;
+            animation-delay: 2s;
+        }
+
+        .blob-3 {
+            bottom: 2rem;
+            left: 5rem;
+            background-color: var(--primary);
+            opacity: 0.35;
+            animation-delay: 4s;
+        }
+
+        @keyframes blob {
+            0%, 100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+        }
+
+        /* Stats Section */
+        .stats {
+            background: white;
+            padding: 4rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 3rem;
+            height: 3rem;
+            background-color: var(--primary-rgba-08);
+            border-radius: 0.5rem;
+            margin: 0 auto 1rem;
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+        }
+
+        /* Features Section */
+        .features {
+            background: #f9fafb;
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            transition: box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-card {
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+        .feature-card:nth-child(5) { animation-delay: 0.5s; }
+        .feature-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .feature-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            color: #6b7280;
+        }
+
+        /* Test System Section */
+        .test-system {
+            padding: 4rem 0;
+        }
+
+        .test-card {
+            background: linear-gradient(135deg, var(--primary-rgba-08), var(--accent-rgba-08), var(--primary-rgba-18));
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--primary-rgba-18);
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .test-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .test-item {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            transition: box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .test-item:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .test-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .test-icon.primary {
+            background-color: var(--primary-rgba-08);
+            color: var(--primary);
+        }
+
+        .test-icon.accent {
+            background-color: var(--accent-rgba-08);
+            color: var(--accent);
+        }
+
+        .test-icon.legal {
+            background-color: rgba(118, 186, 83, 0.08);
+            color: var(--primary);
+        }
+
+        .test-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .test-description {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .test-link {
+            display: flex;
+            align-items: center;
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .test-link:hover {
+            color: #68a547;
+        }
+
+        /* Packages Section */
+        .packages {
+            background: white;
+            padding: 5rem 0;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .packages-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .package-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e5e7eb;
+            position: relative;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .package-card.popular {
+            border-color: var(--primary);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .package-badge {
+            position: absolute;
+            top: -0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .package-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .package-badge-text {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .package-badge-text.legal {
+            background-color: var(--primary-rgba-08);
+            color: var(--primary);
+        }
+
+        .package-badge-text.accent {
+            background-color: var(--accent-rgba-08);
+            color: var(--accent);
+        }
+
+        .package-badge-text.primary {
+            background-color: var(--primary-rgba-08);
+            color: var(--primary);
+        }
+
+        .package-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .package-price {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+
+        .package-period {
+            color: #6b7280;
+        }
+
+        .package-features {
+            margin-bottom: 2rem;
+        }
+
+        .package-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .package-feature-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: #10b981;
+            margin-right: 0.75rem;
+        }
+
+        .package-feature-text {
+            color: #374151;
+        }
+
+        .package-button {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-align: center;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: block;
+        }
+
+        .package-button.primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .package-button.primary:hover {
+            background-color: #68a547;
+        }
+
+        .package-button.secondary {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .package-button.secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* Footer */
+        .footer {
+            background: #111827;
+            color: white;
+            padding: 3rem 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .footer-logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .footer-logo-tagline {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+
+        .footer-description {
+            color: #9ca3af;
+        }
+
+        .footer-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <img src="assets/logo.jpg" alt="ViLaw">
+                    </div>
+                </a>
+
+                <nav class="nav">
+                    <a href="legal.html" class="nav-link">Văn bản</a>
+                    <a href="chat.html" class="nav-link">Chat AI</a>
+                    <a href="enhanced-chat.html" class="nav-link">AI Nâng cao</a>
+                    <a href="documents.html" class="nav-link">Soạn thảo</a>
+                    <a href="contract.html" class="nav-link">Hợp đồng</a>
+                    <a href="dashboard.html" class="nav-link">Admin</a>
+                    <a href="subscription.html" class="nav-link">Gói dịch vụ</a>
+                    <a href="payment.html" class="nav-link">Thanh toán</a>
+                </nav>
+
+                <div>
+                    <a href="loginuser.html" class="btn btn-primary">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        Đăng nhập
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Nền tảng <span class="gradient-text">Pháp lý Số</span><br>
+                    Toàn Dân
+                </h1>
+                
+                <p class="hero-subtitle">
+                    Mỗi công dân – Một trợ lý pháp lý AI. Nền tảng pháp lý số toàn diện, 
+                    tích hợp AI để hỗ trợ công dân, doanh nghiệp và cơ quan nhà nước.
+                </p>
+
+                <div class="hero-cta">
+                    <a href="chat.html" class="btn btn-primary btn-lg">
+                        <i data-lucide="play" class="w-5 h-5"></i>
+                        Bắt đầu ngay
+                    </a>
+                    <a href="legal.html" class="btn btn-secondary btn-lg">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                        Khám phá văn bản
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Background Elements -->
+        <div class="hero-bg">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                    </div>
+                    <div class="stat-value">50K+</div>
+                    <div class="stat-label">Văn bản pháp luật</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                    <div class="stat-value">10K+</div>
+                    <div class="stat-label">Người dùng</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i data-lucide="globe" class="w-5 h-5"></i>
+                    </div>
+                    <div class="stat-value">63/63</div>
+                    <div class="stat-label">Tỉnh thành</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                    </div>
+                    <div class="stat-value">99.9%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Tính năng Nổi bật</h2>
+                <p class="section-subtitle">
+                    Nền tảng pháp lý số tích hợp AI, blockchain và dữ liệu mở
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="search" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="feature-title">Tìm kiếm Thông minh</h3>
+                    <p class="feature-description">
+                        AI-powered search với semantic understanding và context awareness
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="message-square" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="feature-title">Chatbot Pháp lý</h3>
+                    <p class="feature-description">
+                        Trợ lý AI 24/7, trả lời câu hỏi pháp lý bằng tiếng Việt
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="file-text" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="feature-title">Soạn thảo Văn bản</h3>
+                    <p class="feature-description">
+                        Tự động tạo hợp đồng, đơn từ với AI assistance
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="feature-title">Quản lý Hồ sơ</h3>
+                    <p class="feature-description">
+                        Digital case management với workflow automation
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="settings" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="feature-title">Tích hợp API</h3>
+                    <p class="feature-description">
+                        RESTful APIs cho third-party integrations
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="feature-title">Analytics & Reports</h3>
+                    <p class="feature-description">
+                        Real-time insights và predictive analytics
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Test System Section -->
+    <section class="test-system">
+        <div class="container">
+            <div class="test-card">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                        Test hệ thống ngay
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                        Trải nghiệm các tính năng AI-powered của ViLaw với dữ liệu mẫu
+                    </p>
+                    
+                    <div class="test-grid">
+                        <a href="legal.html" class="test-item">
+                            <div class="test-header">
+                                <div class="test-icon primary">
+                                    <i data-lucide="search" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="test-title">Duyệt văn bản</h3>
+                            </div>
+                            <p class="test-description">Tìm kiếm và lọc văn bản pháp luật với AI</p>
+                            <div class="test-link">
+                                <span>Thử ngay</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                            </div>
+                        </a>
+
+                        <a href="chat.html" class="test-item">
+                            <div class="test-header">
+                                <div class="test-icon accent">
+                                    <i data-lucide="message-square" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="test-title">Chat AI</h3>
+                            </div>
+                            <p class="test-description">Trò chuyện với trợ lý pháp lý AI</p>
+                            <div class="test-link">
+                                <span>Thử ngay</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                            </div>
+                        </a>
+
+                        <a href="documents.html" class="test-item">
+                            <div class="test-header">
+                                <div class="test-icon legal">
+                                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="test-title">Soạn thảo</h3>
+                            </div>
+                            <p class="test-description">Tạo văn bản pháp lý với AI assistance</p>
+                            <div class="test-link">
+                                <span>Thử ngay</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Packages Section -->
+    <section class="packages">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Gói Dịch vụ</h2>
+                <p class="section-subtitle">
+                    Lựa chọn gói phù hợp với nhu cầu của bạn
+                </p>
+            </div>
+
+            <div class="packages-grid">
+                <div class="package-card">
+                    <div class="package-header">
+                        <div class="package-badge-text legal">Chính phủ</div>
+                        <h3 class="package-name">Gov</h3>
+                        <div class="package-price">Miễn phí</div>
+                        <p class="package-period">/ tháng</p>
+                    </div>
+
+                    <div class="package-features">
+                        <div class="package-feature">
+                            <i data-lucide="check-circle" class="package-feature-icon"></i>
+                            <span class="package-feature-text">Truy cập cơ bản</span>
+                        </div>
+                        <div class="package-feature">
+                            <i data-lucide="check-circle" class="package-feature-icon"></i>
+                            <span class="package-feature-text">Tìm kiếm văn bản</span>
+                        </div>
+                        <div class="package-feature">
+                            <i data-lucide="check-circle" class="package-feature-icon"></i>
+                            <span class="package-feature-text">Chatbot hỗ trợ</span>
+                        </div>
+                        <div class="package-feature">
+                            <i data-lucide="check-circle" class="package-feature-icon"></i>
+                            <span class="package-feature-text">API cơ bản</span>
+                        </div>
+                    </div>
+
+                    <a href="loginuser.html" class="package-button secondary">
+                        Sử dụng miễn phí
+                    </a>
+                </div>
+
+                <div class="package-card">
+                    <div class="package-header">
+                        <div class="package-badge-text accent">Giáo dục</div>
+                        <h3 class="package-name">Edu</h3>
+                        <div class="package-price">Liên hệ</div>
+                        <p class="package-period">/ tháng</p>
+                    </div>
+
+                    <div class="package-features">
+                        <div class="package-feature">
+                            <i data-lucide="check-circle" class="package-feature-icon"></i>
+                            <span class="package-feature-text">Tất cả tính năng Gov</span>
+                        </div>
+                        <div class="package-feature">
+                            <i data-lucide="check-circle" class="package-feature-icon"></i>
+                            <span class="package-feature-text">Tích hợp LMS</span>
+                        </div>
+                        <div class="package-feature">
+                            <i data-lucide="check-circle" class="package-feature-icon"></i>
+                            <span class="package-feature-text">Custom branding</span>
+                        </div>
+                        <div class="package-feature">
+                            <i data-lucide="check-circle" class="package-feature-icon"></i>
+                            <span class="package-feature-text">Priority support</span>
+                        </div>
+                    </div>
+
+                    <a href="payment.html?pkg=Edu" class="package-button secondary">
+                        Thanh toán bằng ví
+                    </a>
+                </div>
+
+                <div class="package-card popular">
+                    <div class="package-badge">Phổ biến</div>
+                    <div class="package-header">
+                        <div class="package-badge-text primary">Doanh nghiệp</div>
+                        <h3 class="package-name">Pro</h3>
+                        <div class="package-price">Liên hệ</div>
+                        <p class="package-period">/ tháng</p>
+                    </div>
+
+                    <div class="package-features">
+                        <div class="package-feature">
+                            <i data-lucide="check-circle" class="package-feature-icon"></i>
+                            <span class="package-feature-text">Tất cả tính năng Edu</span>
+                        </div>
+                        <div class="package-feature">
+                            <i data-lucide="check-circle" class="package-feature-icon"></i>
+                            <span class="package-feature-text">Advanced AI models</span>
+                        </div>
+                        <div class="package-feature">
+                            <i data-lucide="check-circle" class="package-feature-icon"></i>
+                            <span class="package-feature-text">Custom development</span>
+                        </div>
+                        <div class="package-feature">
+                            <i data-lucide="check-circle" class="package-feature-icon"></i>
+                            <span class="package-feature-text">Dedicated support</span>
+                        </div>
+                    </div>
+
+                    <a href="payment.html?pkg=Pro" class="package-button primary">
+                        Thanh toán bằng ví
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">
+                            <i data-lucide="scale" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <div class="footer-logo-text">ViLaw</div>
+                            <div class="footer-logo-tagline">Nền tảng Pháp lý Số</div>
+                        </div>
+                    </div>
+                    <p class="footer-description">
+                        Mỗi công dân – Một trợ lý pháp lý AI
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Sản phẩm</h4>
+                    <ul class="footer-links">
+                        <li><a href="legal.html">Văn bản pháp luật</a></li>
+                        <li><a href="chat.html">Chat AI</a></li>
+                        <li><a href="documents.html">Soạn thảo</a></li>
+                        <li><a href="admin.html">Admin</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Hỗ trợ</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Tài liệu</a></li>
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Công ty</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Về chúng tôi</a></li>
+                        <li><a href="#">Tuyển dụng</a></li>
+                        <li><a href="#">Bảo mật</a></li>
+                        <li><a href="#">Điều khoản</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 ViLaw. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            
+            // ViLaw App Initialization
+            console.log('Initializing ViLaw App...');
+            
+            // Initialize core systems
+            if (window.vilawApp) {
+                console.log('ViLaw App initialized successfully');
+            }
+            
+            if (window.legalDataManager) {
+                console.log('Legal Data Manager initialized successfully');
+            }
+            
+            if (window.aiChatSystem) {
+                console.log('AI Chat System initialized successfully');
+            }
+            
+            // Setup navigation
+            setupNavigation();
+            
+            // Setup interactive elements
+            setupInteractiveElements();
+            
+            // Setup user authentication
+            setupAuthentication();
+            
+            // Setup analytics
+            setupAnalytics();
+            
+            console.log('ViLaw App fully initialized');
+        });
+        
+        // Navigation setup
+        function setupNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const href = this.getAttribute('href');
+                    if (href && href !== '#') {
+                        // Track navigation
+                        if (window.vilawApp) {
+                            window.vilawApp.navigateTo(href.replace('.html', ''));
+                        } else {
+                            window.location.href = href;
+                        }
+                    }
+                });
+            });
+        }
+        
+        // Interactive elements setup
+        function setupInteractiveElements() {
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.feature-card, .package-card, .test-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                    this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            
+            // Add click effects to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    // Add ripple effect
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    this.appendChild(ripple);
+                    
+                    // Add click animation
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // Add scroll animations
+            setupScrollAnimations();
+            
+            // Add parallax effects
+            setupParallaxEffects();
+        }
+        
+        function setupScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all cards
+            const animatedElements = document.querySelectorAll('.feature-card, .package-card, .test-card, .stat-card');
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s ease-out';
+                observer.observe(el);
+            });
+        }
+        
+        function setupParallaxEffects() {
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallaxElements = document.querySelectorAll('.blob');
+                
+                parallaxElements.forEach((element, index) => {
+                    const speed = 0.5 + (index * 0.1);
+                    element.style.transform = `translateY(${scrolled * speed}px)`;
+                });
+            });
+        }
+        
+        // Authentication setup
+        function setupAuthentication() {
+            // Check if user is logged in
+            if (window.vilawApp && window.vilawApp.isLoggedIn) {
+                updateUIForLoggedInUser();
+            } else {
+                updateUIForGuestUser();
+            }
+        }
+        
+        function updateUIForLoggedInUser() {
+            // Update UI for logged in user
+            const user = window.vilawApp.currentUser;
+            if (user) {
+                // Update user info in header if exists
+                const userInfo = document.querySelector('.user-info');
+                if (userInfo) {
+                    userInfo.innerHTML = `
+                        <span>Xin chào, ${user.name}</span>
+                        <button onclick="logout()" class="btn btn-secondary">Đăng xuất</button>
+                    `;
+                }
+            }
+        }
+        
+        function updateUIForGuestUser() {
+            // Update UI for guest user
+            const userInfo = document.querySelector('.user-info');
+            if (userInfo) {
+                userInfo.innerHTML = `
+                    <a href="loginuser.html" class="btn btn-primary">Đăng nhập</a>
+                `;
+            }
+        }
+        
+        // Analytics setup
+        function setupAnalytics() {
+            // Track page views
+            if (window.vilawApp) {
+                const analytics = window.vilawApp.getAnalytics();
+                console.log('Analytics:', analytics);
+            }
+        }
+        
+        // Global functions
+        function logout() {
+            if (window.vilawApp) {
+                window.vilawApp.logout();
+            }
+        }
+        
+        function showNotification(message, type = 'info') {
+            if (window.vilawApp) {
+                window.vilawApp.showNotification(message, type);
+            }
+        }
+        
+        // Add ripple effect CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            .ripple {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.6);
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                pointer-events: none;
+            }
+            
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

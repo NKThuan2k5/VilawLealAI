@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soạn thảo Văn bản - ViLaw</title>
+    <meta name="description" content="Soạn thảo văn bản pháp lý với AI assistance. Tạo hợp đồng, đơn từ, văn bản pháp lý chuẩn.">
+    
+    <!-- CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #76BA53;
+            --accent: #76819B;
+            --dark: #19253F;
+            --muted: #9B9CAA;
+            --primary-rgba-08: rgba(118, 186, 83, 0.08);
+            --accent-rgba-08: rgba(118, 129, 155, 0.08);
+            --primary-rgba-18: rgba(118, 186, 83, 0.18);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #EFF2F0;
+            color: #19253F;
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--primary-rgba-18);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.5);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #68a547;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+
+        /* Document Types Section */
+        .document-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .document-type-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .document-type-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .document-type-icon {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .document-type-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .document-type-description {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .document-type-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .document-type-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .document-type-features li i {
+            color: var(--primary);
+        }
+
+        .document-type-button {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .document-type-button:hover {
+            background-color: #68a547;
+        }
+
+        /* Document Editor */
+        .document-editor {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .document-editor.active {
+            display: block;
+        }
+
+        .editor-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .editor-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .editor-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .editor-action {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+        }
+
+        .editor-action:hover {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .editor-content {
+            padding: 1.5rem;
+        }
+
+        .editor-form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-input {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(118, 186, 83, 0.1);
+        }
+
+        .form-textarea {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            resize: vertical;
+            min-height: 200px;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(118, 186, 83, 0.1);
+        }
+
+        .form-select {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            background: white;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(118, 186, 83, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .form-button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .form-button.primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .form-button.primary:hover {
+            background-color: #68a547;
+        }
+
+        .form-button.secondary {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .form-button.secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* Document Templates */
+        .document-templates {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .templates-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .templates-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .template-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .template-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .template-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .template-description {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* Generated Document */
+        .generated-document {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .generated-document.active {
+            display: block;
+        }
+
+        .document-content {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            white-space: pre-wrap;
+            font-family: 'Times New Roman', serif;
+            line-height: 1.8;
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .document-action {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .document-action.primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .document-action.primary:hover {
+            background-color: #68a547;
+        }
+
+        .document-action.secondary {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .document-action.secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .document-types {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .document-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <img src="assets/logo.jpg" alt="ViLaw">
+                    </div>
+                </a>
+
+                <nav class="nav">
+                    <a href="legal.html" class="nav-link">Văn bản</a>
+                    <a href="chat.html" class="nav-link">Chat AI</a>
+                    <a href="documents.html" class="nav-link active">Soạn thảo</a>
+                    <a href="contract.html" class="nav-link">Hợp đồng</a>
+                    <a href="dashboard.html" class="nav-link">Admin</a>
+                </nav>
+
+                <div>
+                    <a href="loginuser.html" class="btn btn-primary">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        Đăng nhập
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Soạn thảo Văn bản</h1>
+                <p class="page-subtitle">
+                    Tạo văn bản pháp lý chuẩn với AI assistance
+                </p>
+            </div>
+
+            <!-- Document Types -->
+            <div class="document-types">
+                <div class="document-type-card" onclick="docApp.selectDocumentType('contract')">
+                    <div class="document-type-icon">
+                        <i data-lucide="file-text" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="document-type-title">Hợp đồng</h3>
+                    <p class="document-type-description">
+                        Tạo hợp đồng mua bán, thuê nhà, lao động và các loại hợp đồng khác
+                    </p>
+                    <ul class="document-type-features">
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Mẫu chuẩn pháp luật</li>
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Điều khoản tự động</li>
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Kiểm tra rủi ro</li>
+                    </ul>
+                    <button class="document-type-button">Tạo hợp đồng</button>
+                </div>
+
+                <div class="document-type-card" onclick="docApp.selectDocumentType('application')">
+                    <div class="document-type-icon">
+                        <i data-lucide="file-plus" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="document-type-title">Đơn từ</h3>
+                    <p class="document-type-description">
+                        Soạn thảo đơn xin việc, đơn khiếu nại, đơn tố cáo và các loại đơn từ khác
+                    </p>
+                    <ul class="document-type-features">
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Mẫu đơn chuẩn</li>
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Hướng dẫn điền</li>
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Kiểm tra pháp lý</li>
+                    </ul>
+                    <button class="document-type-button">Tạo đơn từ</button>
+                </div>
+
+                <div class="document-type-card" onclick="docApp.selectDocumentType('legal')">
+                    <div class="document-type-icon">
+                        <i data-lucide="scale" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="document-type-title">Văn bản pháp lý</h3>
+                    <p class="document-type-description">
+                        Tạo thông báo, công văn, quyết định và các văn bản pháp lý khác
+                    </p>
+                    <ul class="document-type-features">
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Định dạng chuẩn</li>
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Ngôn ngữ pháp lý</li>
+                        <li><i data-lucide="check" class="w-4 h-4"></i> Tham chiếu pháp luật</li>
+                    </ul>
+                    <button class="document-type-button">Tạo văn bản</button>
+                </div>
+            </div>
+
+            <!-- Document Editor -->
+            <div class="document-editor" id="documentEditor">
+                <div class="editor-header">
+                    <h2 class="editor-title" id="editorTitle">Soạn thảo văn bản</h2>
+                    <div class="editor-actions">
+                        <button class="editor-action" title="Lưu nháp">
+                            <i data-lucide="save" class="w-4 h-4"></i>
+                        </button>
+                        <button class="editor-action" title="Đóng">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="editor-content">
+                    <form class="editor-form" id="documentForm">
+                        <div class="form-group">
+                            <label class="form-label">Tiêu đề văn bản</label>
+                            <input type="text" class="form-input" id="documentTitle" placeholder="Nhập tiêu đề văn bản">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Loại văn bản</label>
+                            <select class="form-select" id="documentType">
+                                <option value="">Chọn loại văn bản</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Nội dung yêu cầu</label>
+                            <textarea class="form-textarea" id="documentContent" placeholder="Mô tả chi tiết nội dung văn bản bạn muốn tạo..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Thông tin bổ sung (tùy chọn)</label>
+                            <textarea class="form-textarea" id="additionalInfo" placeholder="Thông tin bổ sung như tên công ty, địa chỉ, số điện thoại..."></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="form-button secondary" onclick="docApp.closeEditor()">Hủy</button>
+                            <button type="submit" class="form-button primary">Tạo văn bản</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Document Templates -->
+            <div class="document-templates">
+                <div class="templates-header">
+                    <h3 class="templates-title">Mẫu văn bản phổ biến</h3>
+                </div>
+                <div class="templates-grid" id="templatesGrid">
+                    <!-- Templates will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Generated Document -->
+            <div class="generated-document" id="generatedDocument">
+                <div class="document-content" id="generatedContent">
+                    <!-- Generated document content will appear here -->
+                </div>
+                <div class="document-actions">
+                    <button class="document-action secondary" onclick="docApp.editDocument()">
+                        <i data-lucide="edit" class="w-4 h-4"></i>
+                        Chỉnh sửa
+                    </button>
+                    <button class="document-action secondary" onclick="docApp.downloadDocument()">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        Tải xuống
+                    </button>
+                    <button class="document-action primary" onclick="docApp.shareDocument()">
+                        <i data-lucide="share-2" class="w-4 h-4"></i>
+                        Chia sẻ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Document creation functionality
+        class DocumentApp {
+            constructor() {
+                this.currentDocumentType = null;
+                this.currentDocument = null;
+                this.templates = {
+                    contract: [
+                        { title: 'Hợp đồng mua bán nhà', description: 'Mẫu hợp đồng mua bán nhà ở' },
+                        { title: 'Hợp đồng lao động', description: 'Mẫu hợp đồng lao động' },
+                        { title: 'Hợp đồng thuê nhà', description: 'Mẫu hợp đồng thuê nhà' },
+                        { title: 'Hợp đồng dịch vụ', description: 'Mẫu hợp đồng cung cấp dịch vụ' }
+                    ],
+                    application: [
+                        { title: 'Đơn xin việc', description: 'Mẫu đơn xin việc chuẩn' },
+                        { title: 'Đơn khiếu nại', description: 'Mẫu đơn khiếu nại' },
+                        { title: 'Đơn tố cáo', description: 'Mẫu đơn tố cáo' },
+                        { title: 'Đơn xin nghỉ phép', description: 'Mẫu đơn xin nghỉ phép' }
+                    ],
+                    legal: [
+                        { title: 'Thông báo', description: 'Mẫu thông báo chung' },
+                        { title: 'Công văn', description: 'Mẫu công văn' },
+                        { title: 'Quyết định', description: 'Mẫu quyết định' },
+                        { title: 'Biên bản', description: 'Mẫu biên bản họp' }
+                    ]
+                };
+                
+                this.initializeElements();
+                this.bindEvents();
+                this.loadTemplates();
+            }
+            
+            initializeElements() {
+                this.documentEditor = document.getElementById('documentEditor');
+                this.documentForm = document.getElementById('documentForm');
+                this.documentTitle = document.getElementById('documentTitle');
+                this.documentType = document.getElementById('documentType');
+                this.documentContent = document.getElementById('documentContent');
+                this.additionalInfo = document.getElementById('additionalInfo');
+                this.generatedDocument = document.getElementById('generatedDocument');
+                this.generatedContent = document.getElementById('generatedContent');
+                this.templatesGrid = document.getElementById('templatesGrid');
+            }
+            
+            bindEvents() {
+                this.documentForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.generateDocument();
+                });
+            }
+            
+            loadTemplates() {
+                this.templatesGrid.innerHTML = '';
+                
+                Object.keys(this.templates).forEach(type => {
+                    this.templates[type].forEach(template => {
+                        const templateEl = document.createElement('div');
+                        templateEl.className = 'template-item';
+                        templateEl.innerHTML = `
+                            <div class="template-title">${template.title}</div>
+                            <div class="template-description">${template.description}</div>
+                        `;
+                        templateEl.onclick = () => this.useTemplate(type, template);
+                        this.templatesGrid.appendChild(templateEl);
+                    });
+                });
+            }
+            
+            selectDocumentType(type) {
+                this.currentDocumentType = type;
+                this.showEditor();
+                this.updateDocumentTypeOptions(type);
+            }
+            
+            showEditor() {
+                this.documentEditor.classList.add('active');
+                this.documentEditor.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            closeEditor() {
+                this.documentEditor.classList.remove('active');
+                this.generatedDocument.classList.remove('active');
+                this.resetForm();
+            }
+            
+            updateDocumentTypeOptions(type) {
+                const options = {
+                    contract: [
+                        { value: 'purchase', text: 'Hợp đồng mua bán' },
+                        { value: 'rental', text: 'Hợp đồng thuê' },
+                        { value: 'labor', text: 'Hợp đồng lao động' },
+                        { value: 'service', text: 'Hợp đồng dịch vụ' }
+                    ],
+                    application: [
+                        { value: 'job', text: 'Đơn xin việc' },
+                        { value: 'complaint', text: 'Đơn khiếu nại' },
+                        { value: 'report', text: 'Đơn tố cáo' },
+                        { value: 'leave', text: 'Đơn xin nghỉ phép' }
+                    ],
+                    legal: [
+                        { value: 'notice', text: 'Thông báo' },
+                        { value: 'dispatch', text: 'Công văn' },
+                        { value: 'decision', text: 'Quyết định' },
+                        { value: 'minutes', text: 'Biên bản' }
+                    ]
+                };
+                
+                this.documentType.innerHTML = '<option value="">Chọn loại văn bản</option>';
+                options[type].forEach(option => {
+                    this.documentType.innerHTML += `<option value="${option.value}">${option.text}</option>`;
+                });
+            }
+            
+            useTemplate(type, template) {
+                this.currentDocumentType = type;
+                this.documentTitle.value = template.title;
+                this.documentContent.value = `Tôi muốn tạo ${template.title.toLowerCase()}. ${template.description}.`;
+                this.showEditor();
+                this.updateDocumentTypeOptions(type);
+            }
+            
+            resetForm() {
+                this.documentForm.reset();
+                this.currentDocumentType = null;
+                this.currentDocument = null;
+            }
+            
+            async generateDocument() {
+                const title = this.documentTitle.value.trim();
+                const type = this.documentType.value;
+                const content = this.documentContent.value.trim();
+                const additional = this.additionalInfo.value.trim();
+                
+                if (!title || !type || !content) {
+                    alert('Vui lòng điền đầy đủ thông tin');
+                    return;
+                }
+                
+                // Show loading
+                this.generatedContent.innerHTML = '<div style="text-align: center; padding: 2rem;">Đang tạo văn bản...</div>';
+                this.generatedDocument.classList.add('active');
+                this.generatedDocument.scrollIntoView({ behavior: 'smooth' });
+                
+                try {
+                    // Simulate AI processing
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    const generatedText = this.generateDocumentContent(title, type, content, additional);
+                    this.generatedContent.textContent = generatedText;
+                    this.currentDocument = {
+                        title,
+                        type,
+                        content: generatedText,
+                        timestamp: new Date()
+                    };
+                    
+                } catch (error) {
+                    console.error('Error generating document:', error);
+                    this.generatedContent.innerHTML = '<div style="text-align: center; padding: 2rem; color: #ef4444;">Có lỗi xảy ra khi tạo văn bản. Vui lòng thử lại.</div>';
+                }
+            }
+            
+            generateDocumentContent(title, type, content, additional) {
+                const templates = {
+                    contract: {
+                        purchase: `HỢP ĐỒNG MUA BÁN NHÀ Ở
+
+Căn cứ Bộ luật Dân sự 2015;
+Căn cứ Luật Nhà ở 2014;
+Căn cứ nhu cầu và khả năng của các bên;
+
+Hôm nay, ngày ${new Date().toLocaleDateString('vi-VN')}, tại ${additional || 'địa điểm'}, chúng tôi gồm:
+
+BÊN BÁN: ${additional || 'Thông tin bên bán'}
+BÊN MUA: ${additional || 'Thông tin bên mua'}
+
+Sau khi thỏa thuận, hai bên thống nhất ký kết hợp đồng mua bán nhà ở với các điều khoản sau:
+
+ĐIỀU 1: ĐỐI TƯỢNG HỢP ĐỒNG
+${content}
+
+ĐIỀU 2: GIÁ CẢ VÀ PHƯƠNG THỨC THANH TOÁN
+${content}
+
+ĐIỀU 3: THỜI HẠN VÀ ĐỊA ĐIỂM THỰC HIỆN
+${content}
+
+ĐIỀU 4: QUYỀN VÀ NGHĨA VỤ CỦA CÁC BÊN
+${content}
+
+ĐIỀU 5: ĐIỀU KHOẢN CHUNG
+${content}
+
+Hợp đồng này có hiệu lực kể từ ngày ký và được lập thành 02 bản có giá trị pháp lý như nhau, mỗi bên giữ 01 bản.
+
+BÊN BÁN                    BÊN MUA
+(Ký tên)                   (Ký tên)`,
+                        rental: `HỢP ĐỒNG THUÊ NHÀ Ở
+
+Căn cứ Bộ luật Dân sự 2015;
+Căn cứ Luật Nhà ở 2014;
+Căn cứ nhu cầu và khả năng của các bên;
+
+Hôm nay, ngày ${new Date().toLocaleDateString('vi-VN')}, tại ${additional || 'địa điểm'}, chúng tôi gồm:
+
+BÊN CHO THUÊ: ${additional || 'Thông tin bên cho thuê'}
+BÊN THUÊ: ${additional || 'Thông tin bên thuê'}
+
+Sau khi thỏa thuận, hai bên thống nhất ký kết hợp đồng thuê nhà ở với các điều khoản sau:
+
+ĐIỀU 1: ĐỐI TƯỢNG HỢP ĐỒNG
+${content}
+
+ĐIỀU 2: GIÁ THUÊ VÀ PHƯƠNG THỨC THANH TOÁN
+${content}
+
+ĐIỀU 3: THỜI HẠN THUÊ
+${content}
+
+ĐIỀU 4: QUYỀN VÀ NGHĨA VỤ CỦA CÁC BÊN
+${content}
+
+ĐIỀU 5: ĐIỀU KHOẢN CHUNG
+${content}
+
+Hợp đồng này có hiệu lực kể từ ngày ký và được lập thành 02 bản có giá trị pháp lý như nhau, mỗi bên giữ 01 bản.
+
+BÊN CHO THUÊ                BÊN THUÊ
+(Ký tên)                    (Ký tên)`
+                    },
+                    application: {
+                        job: `ĐƠN XIN VIỆC
+
+Kính gửi: ${additional || 'Tên công ty/tổ chức'}
+
+Tôi tên là: ${additional || 'Họ và tên'}
+Sinh năm: ${additional || 'Năm sinh'}
+Địa chỉ: ${additional || 'Địa chỉ thường trú'}
+Số điện thoại: ${additional || 'Số điện thoại'}
+Email: ${additional || 'Email'}
+
+${content}
+
+Tôi xin chân thành cảm ơn và mong nhận được sự quan tâm của Quý công ty.
+
+${additional || 'Địa điểm'}, ngày ${new Date().getDate()} tháng ${new Date().getMonth() + 1} năm ${new Date().getFullYear()}
+
+Người làm đơn
+(Ký tên)`,
+                        complaint: `ĐƠN KHIẾU NẠI
+
+Kính gửi: ${additional || 'Cơ quan có thẩm quyền'}
+
+Tôi tên là: ${additional || 'Họ và tên'}
+Sinh năm: ${additional || 'Năm sinh'}
+Địa chỉ: ${additional || 'Địa chỉ thường trú'}
+Số điện thoại: ${additional || 'Số điện thoại'}
+
+${content}
+
+Tôi đề nghị Quý cơ quan xem xét và giải quyết khiếu nại của tôi theo đúng quy định của pháp luật.
+
+${additional || 'Địa điểm'}, ngày ${new Date().getDate()} tháng ${new Date().getMonth() + 1} năm ${new Date().getFullYear()}
+
+Người khiếu nại
+(Ký tên)`
+                    },
+                    legal: {
+                        notice: `THÔNG BÁO
+
+Về: ${title}
+
+${content}
+
+${additional || 'Địa điểm'}, ngày ${new Date().getDate()} tháng ${new Date().getMonth() + 1} năm ${new Date().getFullYear()}
+
+${additional || 'Người thông báo'}
+(Ký tên)`,
+                        decision: `QUYẾT ĐỊNH
+
+Về: ${title}
+
+Căn cứ ${additional || 'căn cứ pháp lý'};
+Căn cứ ${additional || 'căn cứ thực tế'};
+
+${content}
+
+Quyết định này có hiệu lực kể từ ngày ký.
+
+${additional || 'Địa điểm'}, ngày ${new Date().getDate()} tháng ${new Date().getMonth() + 1} năm ${new Date().getFullYear()}
+
+${additional || 'Người ra quyết định'}
+(Ký tên)`
+                    }
+                };
+                
+                return templates[this.currentDocumentType]?.[type] || `VĂN BẢN: ${title}\n\n${content}\n\n${additional || 'Thông tin bổ sung'}`;
+            }
+            
+            editDocument() {
+                this.closeEditor();
+                this.showEditor();
+            }
+            
+            downloadDocument() {
+                if (!this.currentDocument) return;
+                
+                const content = this.currentDocument.content;
+                const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${this.currentDocument.title}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+            
+            shareDocument() {
+                if (!this.currentDocument) return;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: this.currentDocument.title,
+                        text: this.currentDocument.content,
+                        url: window.location.href
+                    });
+                } else {
+                    navigator.clipboard.writeText(this.currentDocument.content);
+                    alert('Đã sao chép văn bản để chia sẻ');
+                }
+            }
+        }
+        
+        // Initialize document app
+        let docApp;
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            docApp = new DocumentApp();
+        });
+    </script>
+</body>
+</html>

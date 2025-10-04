@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat AI Pháp lý - ViLaw</title>
+    <meta name="description" content="Trợ lý AI 24/7 cho câu hỏi pháp lý. Chat với trợ lý pháp lý AI thông minh của ViLaw.">
+    
+    <!-- CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #76BA53;
+            --accent: #76819B;
+            --dark: #19253F;
+            --muted: #9B9CAA;
+            --primary-rgba-08: rgba(118, 186, 83, 0.08);
+            --accent-rgba-08: rgba(118, 129, 155, 0.08);
+            --primary-rgba-18: rgba(118, 186, 83, 0.18);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1e293b;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            animation: backgroundShift 15s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-15px) translateY(-5px); }
+            50% { transform: translateX(15px) translateY(5px); }
+            75% { transform: translateX(-5px) translateY(15px); }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--primary-rgba-18);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.5);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #68a547;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            height: calc(100vh - 80px);
+            padding: 1.5rem 0;
+        }
+
+        @media (min-width: 1024px) {
+            .chat-container {
+                grid-template-columns: 3fr 1fr;
+            }
+        }
+
+        .chat-interface {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .chat-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .chat-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chat-action {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chat-action:hover {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .message {
+            margin-bottom: 1.5rem;
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message-content {
+            display: inline-flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            max-width: 80%;
+        }
+
+        .message.user .message-content {
+            margin-left: auto;
+        }
+
+        .message-avatar {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            order: 2;
+        }
+
+        .message-avatar.ai {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .message-avatar.user {
+            background-color: #6b7280;
+            color: white;
+        }
+
+        .message-bubble {
+            border-radius: 1rem;
+            padding: 1rem;
+            max-width: 100%;
+        }
+
+        .message.ai .message-bubble {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .message.user .message-bubble {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .message.ai .message-time {
+            color: #6b7280;
+        }
+
+        .message.user .message-time {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .message-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            margin-left: 2.75rem;
+        }
+
+        .message-action {
+            padding: 0.25rem;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .message-action:hover {
+            color: #6b7280;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 0.25rem;
+            padding: 1rem;
+            background-color: #f3f4f6;
+            border-radius: 1rem;
+        }
+
+        .typing-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: #9ca3af;
+            border-radius: 50%;
+            animation: bounce 1s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .chat-input {
+            border-top: 1px solid #e5e7eb;
+            padding: 1rem;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.75rem;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            resize: none;
+            font-family: inherit;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(118, 186, 83, 0.1);
+        }
+
+        .input-button {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-button.record {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .input-button.record.active {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .input-button.send {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .input-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .suggestions-sidebar {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+        }
+
+        .suggestion-item {
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 0.75rem;
+        }
+
+        .suggestion-item:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-rgba-08);
+        }
+
+        .suggestion-icon {
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+
+        .suggestion-text {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #111827;
+        }
+
+        .quick-actions {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .quick-action {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            background: none;
+            border: none;
+            text-align: left;
+        }
+
+        .quick-action:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .chat-container {
+                grid-template-columns: 1fr;
+            }
+
+            .suggestions-sidebar {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <img src="assets/logo.jpg" alt="ViLaw">
+                    </div>
+                </a>
+
+                <nav class="nav">
+                    <a href="legal.html" class="nav-link">Văn bản</a>
+                    <a href="chat.html" class="nav-link active">Chat AI</a>
+                    <a href="documents.html" class="nav-link">Soạn thảo</a>
+                    <a href="contract.html" class="nav-link">Hợp đồng</a>
+                    <a href="dashboard.html" class="nav-link">Admin</a>
+                </nav>
+
+                <div>
+                    <a href="loginuser.html" class="btn btn-primary">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        Đăng nhập
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Chat Interface -->
+    <div class="container">
+        <div class="chat-container">
+            <!-- Chat Interface -->
+            <div class="chat-interface">
+                <div class="chat-header">
+                    <h1 class="chat-title">Chat AI Pháp lý</h1>
+                    <div class="chat-actions">
+                        <button class="chat-action" title="Bật âm thanh">
+                            <i data-lucide="volume-2" class="w-4 h-4"></i>
+                        </button>
+                        <button class="chat-action" title="Cài đặt">
+                            <i data-lucide="settings" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div class="messages-container" id="messagesContainer">
+                    <div class="message ai">
+                        <div class="message-content">
+                            <div class="message-avatar ai">
+                                <i data-lucide="bot" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <div class="message-bubble">
+                                    Xin chào! Tôi là trợ lý pháp lý AI của ViLaw. Tôi có thể giúp bạn tìm hiểu về pháp luật Việt Nam, soạn thảo văn bản pháp lý, và trả lời các câu hỏi liên quan đến quyền lợi của bạn. Bạn có thể hỏi tôi bất cứ điều gì!
+                                </div>
+                                <div class="message-time">10:30</div>
+                                <div class="message-actions">
+                                    <button class="message-action" title="Sao chép">
+                                        <i data-lucide="copy" class="w-3 h-3"></i>
+                                    </button>
+                                    <button class="message-action" title="Chia sẻ">
+                                        <i data-lucide="share-2" class="w-3 h-3"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input -->
+                <div class="chat-input">
+                    <div class="input-container">
+                        <textarea 
+                            id="messageInput" 
+                            class="input-field" 
+                            placeholder="Nhập câu hỏi pháp lý của bạn..."
+                            rows="1"
+                        ></textarea>
+                        
+                        <button id="recordBtn" class="input-button record" title="Ghi âm">
+                            <i data-lucide="mic" class="w-5 h-5"></i>
+                        </button>
+                        
+                        <button id="sendBtn" class="input-button send" title="Gửi tin nhắn" disabled>
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suggestions Sidebar -->
+            <div class="suggestions-sidebar">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Gợi ý câu hỏi</h3>
+                
+                <!-- Category Filter -->
+                <div class="mb-4">
+                    <select id="categoryFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <option value="all">Tất cả danh mục</option>
+                        <option value="general">Tổng hợp</option>
+                        <option value="contract">Hợp đồng</option>
+                        <option value="labor">Lao động</option>
+                        <option value="property">Tài sản</option>
+                        <option value="criminal">Hình sự</option>
+                        <option value="civil">Dân sự</option>
+                    </select>
+                </div>
+
+                <!-- Suggestions -->
+                <div id="suggestionsList">
+                    <button class="suggestion-item" data-category="labor">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="building" class="w-4 h-4 suggestion-icon"></i>
+                            <span class="suggestion-text">Tôi có quyền gì khi bị sa thải trái phép?</span>
+                        </div>
+                    </button>
+                    
+                    <button class="suggestion-item" data-category="property">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="file-text" class="w-4 h-4 suggestion-icon"></i>
+                            <span class="suggestion-text">Cách soạn thảo hợp đồng mua bán nhà?</span>
+                        </div>
+                    </button>
+                    
+                    <button class="suggestion-item" data-category="general">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="scale" class="w-4 h-4 suggestion-icon"></i>
+                            <span class="suggestion-text">Thủ tục thành lập công ty TNHH?</span>
+                        </div>
+                    </button>
+                    
+                    <button class="suggestion-item" data-category="labor">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="gavel" class="w-4 h-4 suggestion-icon"></i>
+                            <span class="suggestion-text">Quyền lợi người lao động khi nghỉ việc?</span>
+                        </div>
+                    </button>
+                    
+                    <button class="suggestion-item" data-category="civil">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="message-square" class="w-4 h-4 suggestion-icon"></i>
+                            <span class="suggestion-text">Cách khiếu nại quyết định hành chính?</span>
+                        </div>
+                    </button>
+                    
+                    <button class="suggestion-item" data-category="property">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="book-open" class="w-4 h-4 suggestion-icon"></i>
+                            <span class="suggestion-text">Thủ tục thừa kế tài sản?</span>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h4 class="text-sm font-medium text-gray-900 mb-3">Thao tác nhanh</h4>
+                    <div class="space-y-2">
+                        <button class="quick-action">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            <span class="text-sm">Tải lịch sử chat</span>
+                        </button>
+                        <button class="quick-action">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                            <span class="text-sm">Bắt đầu lại</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Chat functionality
+        class ChatApp {
+            constructor() {
+                this.messages = [];
+                this.isTyping = false;
+                this.isRecording = false;
+                this.isMuted = false;
+                this.selectedCategory = 'all';
+                this.legalData = [];
+                this.aiModel = null;
+                
+                this.initializeElements();
+                this.bindEvents();
+                this.loadMessages();
+                this.loadLegalData();
+                this.initializeAI();
+            }
+            
+            initializeElements() {
+                this.messagesContainer = document.getElementById('messagesContainer');
+                this.messageInput = document.getElementById('messageInput');
+                this.sendBtn = document.getElementById('sendBtn');
+                this.recordBtn = document.getElementById('recordBtn');
+                this.categoryFilter = document.getElementById('categoryFilter');
+                this.suggestionsList = document.getElementById('suggestionsList');
+                
+                // Debug: Check if elements exist
+                console.log('Messages container:', this.messagesContainer);
+                console.log('Message input:', this.messageInput);
+                console.log('Send button:', this.sendBtn);
+                
+                if (!this.messagesContainer) {
+                    console.error('Messages container not found!');
+                }
+                if (!this.messageInput) {
+                    console.error('Message input not found!');
+                }
+                if (!this.sendBtn) {
+                    console.error('Send button not found!');
+                }
+            }
+            
+            bindEvents() {
+                console.log('Binding events...');
+                
+                // Send button
+                if (this.sendBtn) {
+                    console.log('Adding send button listener');
+                    this.sendBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        console.log('Send button clicked');
+                        this.sendMessage();
+                    });
+                } else {
+                    console.error('Send button not found!');
+                }
+                
+                // Record button
+                if (this.recordBtn) {
+                    console.log('Adding record button listener');
+                    this.recordBtn.addEventListener('click', () => this.toggleRecording());
+                }
+                
+                // Category filter
+                if (this.categoryFilter) {
+                    console.log('Adding category filter listener');
+                    this.categoryFilter.addEventListener('change', (e) => this.filterSuggestions(e.target.value));
+                }
+                
+                // Message input
+                if (this.messageInput) {
+                    console.log('Adding message input listeners');
+                    this.messageInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            console.log('Enter key pressed');
+                            this.sendMessage();
+                        }
+                    });
+                    
+                    this.messageInput.addEventListener('input', () => {
+                        if (this.sendBtn) {
+                            this.sendBtn.disabled = !this.messageInput.value.trim();
+                        }
+                        // Auto-resize textarea
+                        this.messageInput.style.height = 'auto';
+                        this.messageInput.style.height = this.messageInput.scrollHeight + 'px';
+                    });
+                } else {
+                    console.error('Message input not found!');
+                }
+                
+                // Suggestion clicks
+                if (this.suggestionsList) {
+                    console.log('Adding suggestions listener');
+                    this.suggestionsList.addEventListener('click', (e) => {
+                        const suggestion = e.target.closest('.suggestion-item');
+                        if (suggestion) {
+                            const text = suggestion.querySelector('.suggestion-text').textContent;
+                            if (this.messageInput) {
+                                this.messageInput.value = text;
+                                this.sendMessage();
+                            }
+                        }
+                    });
+                }
+                
+                console.log('Events bound successfully');
+            }
+            
+            loadMessages() {
+                const saved = localStorage.getItem('vilaw_chat_messages');
+                if (saved) {
+                    this.messages = JSON.parse(saved);
+                    this.renderMessages();
+                } else {
+                    // Add welcome message
+                    this.addMessage('ai', 'Xin chào! Tôi là trợ lý pháp lý AI của ViLaw. Tôi có thể giúp bạn tìm hiểu về pháp luật Việt Nam, soạn thảo văn bản pháp lý, và trả lời các câu hỏi liên quan đến quyền lợi của bạn. Bạn có thể hỏi tôi bất cứ điều gì!');
+                }
+            }
+            
+            saveMessages() {
+                localStorage.setItem('vilaw_chat_messages', JSON.stringify(this.messages));
+            }
+            
+            addMessage(type, content) {
+                const message = {
+                    id: Date.now().toString(),
+                    type,
+                    content,
+                    timestamp: new Date()
+                };
+                
+                this.messages.push(message);
+                this.saveMessages();
+                this.renderMessages();
+                this.scrollToBottom();
+            }
+            
+            renderMessages() {
+                this.messagesContainer.innerHTML = '';
+                
+                this.messages.forEach(message => {
+                    const messageEl = this.createMessageElement(message);
+                    this.messagesContainer.appendChild(messageEl);
+                });
+            }
+            
+            createMessageElement(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${message.type}`;
+                
+                const time = message.timestamp.toLocaleTimeString('vi-VN', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        ${message.type === 'ai' ? `
+                            <div class="message-avatar ai">
+                                <i data-lucide="bot" class="w-4 h-4"></i>
+                            </div>
+                        ` : ''}
+                        <div>
+                            <div class="message-bubble">${message.content}</div>
+                            <div class="message-time">${time}</div>
+                            ${message.type === 'ai' ? `
+                                <div class="message-actions">
+                                    <button class="message-action" onclick="chatApp.copyMessage('${message.id}')" title="Sao chép">
+                                        <i data-lucide="copy" class="w-3 h-3"></i>
+                                    </button>
+                                    <button class="message-action" onclick="chatApp.shareMessage('${message.id}')" title="Chia sẻ">
+                                        <i data-lucide="share-2" class="w-3 h-3"></i>
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                        ${message.type === 'user' ? `
+                            <div class="message-avatar user">
+                                <i data-lucide="user" class="w-4 h-4"></i>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                return messageDiv;
+            }
+            
+            sendMessage() {
+                console.log('sendMessage called');
+                
+                if (!this.messageInput) {
+                    console.error('Message input not found in sendMessage');
+                    return;
+                }
+                
+                const content = this.messageInput.value.trim();
+                console.log('Message content:', content);
+                
+                if (!content) {
+                    console.log('No content to send');
+                    return;
+                }
+                
+                console.log('Sending message:', content);
+                this.addMessage('user', content);
+                this.messageInput.value = '';
+                
+                if (this.sendBtn) {
+                    this.sendBtn.disabled = true;
+                }
+                
+                this.showTyping();
+                this.generateAIResponse(content);
+            }
+            
+            showTyping() {
+                this.isTyping = true;
+                const typingEl = document.createElement('div');
+                typingEl.className = 'typing-indicator';
+                typingEl.id = 'typingIndicator';
+                typingEl.innerHTML = `
+                    <div class="message-avatar ai">
+                        <i data-lucide="bot" class="w-4 h-4"></i>
+                    </div>
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                `;
+                
+                this.messagesContainer.appendChild(typingEl);
+                this.scrollToBottom();
+            }
+            
+            hideTyping() {
+                this.isTyping = false;
+                const typingEl = document.getElementById('typingIndicator');
+                if (typingEl) {
+                    typingEl.remove();
+                }
+            }
+            
+            async generateAIResponse(userInput) {
+                try {
+                    console.log('Generating AI response for:', userInput);
+                    
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+                    
+                    // Analyze user input and find relevant legal documents
+                    const relevantDocs = this.findRelevantDocuments(userInput);
+                    const response = this.generateContextualResponse(userInput, relevantDocs);
+                    
+                    console.log('AI response generated:', response);
+                    this.addMessage('ai', response);
+                } catch (error) {
+                    console.error('AI response error:', error);
+                    this.addMessage('ai', 'Xin lỗi, có lỗi xảy ra khi xử lý câu hỏi của bạn. Vui lòng thử lại sau.');
+                } finally {
+                    this.hideTyping();
+                }
+            }
+            
+            loadLegalData() {
+                // Load legal data from localStorage or API
+                const savedData = localStorage.getItem('vilaw_legal_data');
+                if (savedData) {
+                    this.legalData = JSON.parse(savedData);
+                    console.log(`Đã tải ${this.legalData.length} văn bản pháp luật`);
+                } else {
+                    // Load sample data
+                    this.legalData = this.getSampleLegalData();
+                }
+            }
+            
+            initializeAI() {
+                // Initialize AI model with legal data
+                this.aiModel = {
+                    accuracy: 98.5,
+                    lastTraining: new Date().toISOString(),
+                    dataCount: this.legalData.length
+                };
+            }
+            
+            findRelevantDocuments(userInput) {
+                const keywords = this.extractKeywords(userInput);
+                const relevantDocs = [];
+                
+                for (const doc of this.legalData) {
+                    const relevanceScore = this.calculateRelevanceScore(userInput, doc);
+                    if (relevanceScore > 0.3) {
+                        relevantDocs.push({
+                            ...doc,
+                            relevanceScore
+                        });
+                    }
+                }
+                
+                return relevantDocs
+                    .sort((a, b) => b.relevanceScore - a.relevanceScore)
+                    .slice(0, 3);
+            }
+            
+            calculateRelevanceScore(userInput, document) {
+                const input = userInput.toLowerCase();
+                const title = document.title.toLowerCase();
+                const content = document.content.toLowerCase();
+                const keywords = document.keywords || [];
+                
+                let score = 0;
+                
+                // Title match (highest weight)
+                if (title.includes(input)) {
+                    score += 0.8;
+                }
+                
+                // Keyword matches
+                for (const keyword of keywords) {
+                    if (input.includes(keyword.toLowerCase())) {
+                        score += 0.6;
+                    }
+                }
+                
+                // Content word matches
+                const inputWords = input.split(/\s+/).filter(word => word.length > 2);
+                const contentWords = content.split(/\s+/);
+                
+                let wordMatches = 0;
+                for (const word of inputWords) {
+                    if (contentWords.includes(word)) {
+                        wordMatches++;
+                    }
+                }
+                
+                score += (wordMatches / inputWords.length) * 0.4;
+                
+                // Partial matches
+                for (const word of inputWords) {
+                    for (const contentWord of contentWords) {
+                        if (contentWord.includes(word) || word.includes(contentWord)) {
+                            score += 0.1;
+                        }
+                    }
+                }
+                
+                return Math.min(score, 1.0);
+            }
+            
+            extractKeywords(text) {
+                return text.toLowerCase()
+                    .replace(/[^\w\s\u00C0-\u1EF9]/g, '')
+                    .split(/\s+/)
+                    .filter(word => word.length > 2);
+            }
+            
+            generateContextualResponse(userInput, relevantDocs) {
+                // Analyze user intent
+                const intent = this.analyzeUserIntent(userInput);
+                
+                if (relevantDocs.length === 0) {
+                    return this.generateGeneralResponse(userInput, intent);
+                }
+                
+                const topDoc = relevantDocs[0];
+                let response = this.generateStructuredResponse(userInput, topDoc, relevantDocs, intent);
+                
+                return response;
+            }
+            
+            analyzeUserIntent(userInput) {
+                const input = userInput.toLowerCase();
+                
+                // Hiến pháp và luật cơ bản
+                if (input.includes('hiến pháp') || input.includes('cơ bản') || input.includes('quyền công dân')) {
+                    return 'constitutional_inquiry';
+                }
+                // Luật hình sự
+                else if (input.includes('hình sự') || input.includes('tội phạm') || input.includes('hình phạt') || input.includes('tố tụng hình sự')) {
+                    return 'criminal_inquiry';
+                }
+                // Luật dân sự
+                else if (input.includes('dân sự') || input.includes('tố tụng dân sự') || input.includes('sở hữu') || input.includes('thừa kế')) {
+                    return 'civil_inquiry';
+                }
+                // Luật lao động
+                else if (input.includes('lao động') || input.includes('việc làm') || input.includes('lương') || input.includes('nghỉ phép')) {
+                    return 'labor_inquiry';
+                }
+                // Luật doanh nghiệp
+                else if (input.includes('doanh nghiệp') || input.includes('công ty') || input.includes('thành lập') || input.includes('kinh doanh')) {
+                    return 'business_inquiry';
+                }
+                // Luật hôn nhân gia đình
+                else if (input.includes('hôn nhân') || input.includes('gia đình') || input.includes('vợ chồng') || input.includes('cha mẹ')) {
+                    return 'family_inquiry';
+                }
+                // Luật đất đai, nhà ở
+                else if (input.includes('đất đai') || input.includes('nhà ở') || input.includes('bất động sản') || input.includes('mua bán nhà')) {
+                    return 'property_inquiry';
+                }
+                // Luật an ninh mạng
+                else if (input.includes('an ninh mạng') || input.includes('bảo mật') || input.includes('dữ liệu cá nhân') || input.includes('quyền riêng tư')) {
+                    return 'cybersecurity_inquiry';
+                }
+                // Bảo hiểm xã hội
+                else if (input.includes('bảo hiểm') || input.includes('xã hội') || input.includes('hưu trí') || input.includes('thất nghiệp')) {
+                    return 'social_insurance_inquiry';
+                }
+                // Thuế
+                else if (input.includes('thuế') || input.includes('khai thuế') || input.includes('nộp thuế') || input.includes('hoàn thuế')) {
+                    return 'tax_inquiry';
+                }
+                // Giao thông
+                else if (input.includes('giao thông') || input.includes('xử phạt') || input.includes('vi phạm') || input.includes('đường bộ')) {
+                    return 'traffic_inquiry';
+                }
+                // COVID-19
+                else if (input.includes('covid') || input.includes('dịch bệnh') || input.includes('giãn cách') || input.includes('hỗ trợ')) {
+                    return 'covid_inquiry';
+                }
+                // Hợp đồng
+                else if (input.includes('hợp đồng') || input.includes('thỏa thuận') || input.includes('ký kết') || input.includes('giao dịch')) {
+                    return 'contract_inquiry';
+                }
+                // Nghị định, nghị quyết
+                else if (input.includes('nghị định') || input.includes('nghị quyết') || input.includes('chỉ thị') || input.includes('quyết định')) {
+                    return 'administrative_inquiry';
+                }
+                // Thông tư
+                else if (input.includes('thông tư') || input.includes('hướng dẫn') || input.includes('thực hiện')) {
+                    return 'circular_inquiry';
+                }
+                // Luật chung
+                else if (input.includes('luật') || input.includes('quy định') || input.includes('pháp luật')) {
+                    return 'legal_inquiry';
+                } else {
+                    return 'general_inquiry';
+                }
+            }
+            
+            generateGeneralResponse(userInput, intent) {
+                const responses = {
+                    'constitutional_inquiry': 'Về Hiến pháp và quyền cơ bản của công dân, tôi có thể cung cấp thông tin về các quyền và nghĩa vụ được quy định trong Hiến pháp. Bạn có thể hỏi cụ thể về quyền nào?',
+                    'criminal_inquiry': 'Về luật hình sự và tố tụng hình sự, tôi có thể giúp bạn hiểu các quy định về tội phạm, hình phạt và thủ tục tố tụng. Bạn có thể mô tả tình huống cụ thể không?',
+                    'civil_inquiry': 'Về luật dân sự và tố tụng dân sự, tôi có thể hỗ trợ bạn tìm hiểu về quyền sở hữu, thừa kế, hợp đồng dân sự. Bạn đang quan tâm đến vấn đề gì?',
+                    'labor_inquiry': 'Về quyền lao động, tôi có thể cung cấp thông tin về các quy định liên quan đến quan hệ lao động, tiền lương, thời giờ làm việc. Bạn có thể chia sẻ thêm về tình huống cụ thể không?',
+                    'business_inquiry': 'Về pháp luật doanh nghiệp, tôi có thể hỗ trợ bạn tìm hiểu về thành lập, quản lý, hoạt động doanh nghiệp. Bạn đang quan tâm đến khía cạnh nào cụ thể?',
+                    'family_inquiry': 'Về pháp luật hôn nhân và gia đình, tôi có thể cung cấp thông tin về quyền và nghĩa vụ của các thành viên gia đình. Bạn có thể mô tả tình huống cụ thể không?',
+                    'property_inquiry': 'Về luật đất đai và nhà ở, tôi có thể giúp bạn hiểu về quyền sở hữu, sử dụng đất đai và nhà ở. Bạn có thể chia sẻ thêm chi tiết không?',
+                    'cybersecurity_inquiry': 'Về luật an ninh mạng và bảo vệ dữ liệu cá nhân, tôi có thể cung cấp thông tin về các quy định bảo vệ thông tin. Bạn có thể hỏi cụ thể về vấn đề gì?',
+                    'social_insurance_inquiry': 'Về bảo hiểm xã hội, tôi có thể giúp bạn hiểu về các chế độ, chính sách bảo hiểm. Bạn có thể mô tả tình huống cụ thể không?',
+                    'tax_inquiry': 'Về thuế và quản lý thuế, tôi có thể hỗ trợ bạn tìm hiểu về các quy định khai thuế, nộp thuế, hoàn thuế. Bạn đang quan tâm đến loại thuế nào?',
+                    'traffic_inquiry': 'Về luật giao thông và xử phạt vi phạm, tôi có thể cung cấp thông tin về các quy định giao thông và mức phạt. Bạn có thể mô tả tình huống cụ thể không?',
+                    'covid_inquiry': 'Về các quy định phòng chống COVID-19, tôi có thể cung cấp thông tin về các biện pháp phòng chống dịch và hỗ trợ. Bạn có thể hỏi cụ thể về vấn đề gì?',
+                    'contract_inquiry': 'Về hợp đồng và thỏa thuận, tôi có thể giúp bạn hiểu các quy định về ký kết, thực hiện hợp đồng. Bạn có thể mô tả cụ thể về loại hợp đồng không?',
+                    'administrative_inquiry': 'Về nghị định, nghị quyết, chỉ thị, quyết định, tôi có thể cung cấp thông tin về các văn bản hành chính. Bạn có thể hỏi cụ thể về văn bản nào?',
+                    'circular_inquiry': 'Về thông tư và hướng dẫn thực hiện, tôi có thể giúp bạn hiểu các quy định chi tiết. Bạn có thể mô tả vấn đề cụ thể không?',
+                    'legal_inquiry': 'Tôi hiểu bạn đang tìm hiểu về pháp luật. Để hỗ trợ tốt nhất, bạn có thể cung cấp thêm chi tiết về lĩnh vực pháp luật cụ thể mà bạn quan tâm không?',
+                    'general_inquiry': 'Tôi là trợ lý pháp lý AI của ViLaw. Tôi có thể giúp bạn tìm hiểu về tất cả các loại văn bản pháp luật Việt Nam: Luật, Nghị định, Nghị quyết, Thông tư, Quyết định, Chỉ thị, Hợp đồng mẫu. Bạn có thể hỏi tôi về bất kỳ vấn đề pháp lý nào!'
+                };
+                
+                return responses[intent] || responses['general_inquiry'];
+            }
+            
+            generateStructuredResponse(userInput, topDoc, relevantDocs, intent) {
+                let response = `Dựa trên ${relevantDocs.length} văn bản pháp luật liên quan, tôi có thể giúp bạn như sau:\n\n`;
+                
+                response += `📋 **${topDoc.title}**\n`;
+                response += `📅 Ngày ban hành: ${new Date(topDoc.date).toLocaleDateString('vi-VN')}\n`;
+                response += `📂 Loại: ${topDoc.type}\n`;
+                response += `🏛️ Nguồn: ${topDoc.source}\n\n`;
+                
+                // Add specific guidance based on intent
+                response += this.addIntentSpecificGuidance(intent, topDoc);
+                
+                response += `**Nội dung liên quan:**\n`;
+                response += this.extractRelevantContent(userInput, topDoc.content);
+                
+                if (relevantDocs.length > 1) {
+                    response += `\n\n**Các văn bản khác liên quan:**\n`;
+                    for (let i = 1; i < relevantDocs.length; i++) {
+                        response += `• ${relevantDocs[i].title} (${relevantDocs[i].type})\n`;
+                    }
+                }
+                
+                response += `\n\n⚠️ **Lưu ý:** Thông tin trên chỉ mang tính chất tham khảo. Để có câu trả lời chính xác nhất, bạn nên tham khảo ý kiến của luật sư chuyên nghiệp.`;
+                
+                return response;
+            }
+            
+            addIntentSpecificGuidance(intent, doc) {
+                const guidance = {
+                    'constitutional_inquiry': `Đây là Hiến pháp - luật cơ bản có hiệu lực pháp lý cao nhất. Bạn nên đọc kỹ các quy định về quyền và nghĩa vụ cơ bản của công dân.\n\n`,
+                    'criminal_inquiry': `Văn bản này quy định về tội phạm và hình phạt. Bạn nên chú ý đến các điều kiện cấu thành tội phạm và mức hình phạt.\n\n`,
+                    'civil_inquiry': `Văn bản này quy định về quan hệ dân sự. Bạn nên xem xét các quyền và nghĩa vụ của các bên trong quan hệ dân sự.\n\n`,
+                    'labor_inquiry': `Văn bản này quy định về quyền và nghĩa vụ lao động. Bạn nên xem xét các điều khoản liên quan đến tình huống lao động của mình.\n\n`,
+                    'business_inquiry': `Đây là văn bản quy định về hoạt động doanh nghiệp. Hãy chú ý đến các yêu cầu và thủ tục pháp lý khi thành lập, quản lý doanh nghiệp.\n\n`,
+                    'family_inquiry': `Văn bản này quy định về quan hệ hôn nhân và gia đình. Bạn nên xem xét các điều kiện và quyền lợi được quy định cho các thành viên gia đình.\n\n`,
+                    'property_inquiry': `Văn bản này quy định về quyền sở hữu, sử dụng đất đai và nhà ở. Hãy chú ý đến các điều kiện và thủ tục pháp lý.\n\n`,
+                    'cybersecurity_inquiry': `Văn bản này quy định về bảo vệ an ninh mạng và dữ liệu cá nhân. Bạn nên chú ý đến các nghĩa vụ bảo vệ thông tin.\n\n`,
+                    'social_insurance_inquiry': `Văn bản này quy định về chế độ bảo hiểm xã hội. Bạn nên xem xét các quyền lợi và nghĩa vụ đóng bảo hiểm.\n\n`,
+                    'tax_inquiry': `Văn bản này quy định về quản lý thuế. Bạn nên chú ý đến các thủ tục khai thuế, nộp thuế và hoàn thuế.\n\n`,
+                    'traffic_inquiry': `Văn bản này quy định về xử phạt vi phạm giao thông. Bạn nên chú ý đến các mức phạt và thủ tục xử phạt.\n\n`,
+                    'covid_inquiry': `Văn bản này quy định về các biện pháp phòng chống COVID-19. Bạn nên chú ý đến các quy định về giãn cách và hỗ trợ.\n\n`,
+                    'contract_inquiry': `Văn bản này có thể chứa các quy định về hợp đồng. Hãy chú ý đến các điều kiện và nghĩa vụ của các bên.\n\n`,
+                    'administrative_inquiry': `Đây là văn bản hành chính có hiệu lực thi hành. Bạn nên chú ý đến các quy định và thủ tục thực hiện.\n\n`,
+                    'circular_inquiry': `Đây là thông tư hướng dẫn thực hiện. Bạn nên chú ý đến các quy định chi tiết và thủ tục cụ thể.\n\n`,
+                    'legal_inquiry': `Đây là văn bản pháp luật chính thức có hiệu lực. Bạn nên đọc kỹ các điều khoản liên quan đến câu hỏi của mình.\n\n`
+                };
+                
+                return guidance[intent] || '';
+            }
+            
+            extractRelevantContent(userInput, content) {
+                // Simple content extraction - in real implementation, this would be more sophisticated
+                const sentences = content.split(/[.!?]+/);
+                const relevantSentences = sentences.filter(sentence => 
+                    sentence.toLowerCase().includes(userInput.toLowerCase()) ||
+                    this.calculateRelevanceScore(userInput, { content: sentence }) > 0.2
+                );
+                
+                return relevantSentences.slice(0, 3).join('. ') + '.';
+            }
+            
+            getSampleLegalData() {
+                return [
+                    // LUẬT CƠ BẢN
+                    {
+                        id: 'doc_1',
+                        title: 'Hiến pháp nước Cộng hòa xã hội chủ nghĩa Việt Nam 2013',
+                        content: 'Hiến pháp là luật cơ bản của nước Cộng hòa xã hội chủ nghĩa Việt Nam, có hiệu lực pháp lý cao nhất. Hiến pháp quy định về chế độ chính trị, kinh tế, văn hóa, xã hội, quốc phòng, an ninh, quyền và nghĩa vụ cơ bản của công dân, cơ cấu, nguyên tắc tổ chức và hoạt động của các cơ quan nhà nước.',
+                        type: 'Hiến pháp',
+                        source: 'Quốc hội',
+                        date: '2013-11-28T00:00:00.000Z',
+                        keywords: ['hiến pháp', 'cơ bản', 'quyền', 'nghĩa vụ', 'công dân', 'nhà nước'],
+                        category: 'hien-phap'
+                    },
+                    {
+                        id: 'doc_2',
+                        title: 'Luật Doanh nghiệp 2020',
+                        content: 'Luật này quy định về việc thành lập, quản lý, tổ chức lại, giải thể doanh nghiệp; quyền và nghĩa vụ của chủ sở hữu, thành viên, cổ đông của doanh nghiệp. Doanh nghiệp có quyền tự do kinh doanh trong những ngành, nghề mà pháp luật không cấm. Doanh nghiệp có nghĩa vụ tuân thủ các quy định về bảo vệ môi trường, an toàn lao động, quyền lợi người lao động.',
+                        type: 'Luật',
+                        source: 'Quốc hội',
+                        date: '2020-06-17T00:00:00.000Z',
+                        keywords: ['doanh nghiệp', 'thành lập', 'quản lý', 'giải thể', 'kinh doanh', 'quyền', 'nghĩa vụ'],
+                        category: 'luat'
+                    },
+                    {
+                        id: 'doc_3',
+                        title: 'Luật Lao động 2019',
+                        content: 'Luật này quy định về quyền và nghĩa vụ của người lao động, người sử dụng lao động, quan hệ lao động và các vấn đề khác liên quan đến lao động. Người lao động có quyền được bảo vệ sức khỏe, an toàn lao động, được trả lương đúng thời hạn, được nghỉ phép, nghỉ lễ theo quy định.',
+                        type: 'Luật',
+                        source: 'Quốc hội',
+                        date: '2019-11-20T00:00:00.000Z',
+                        keywords: ['lao động', 'quyền', 'nghĩa vụ', 'quan hệ lao động', 'lương', 'nghỉ phép', 'an toàn'],
+                        category: 'luat'
+                    },
+                    {
+                        id: 'doc_4',
+                        title: 'Luật Dân sự 2015',
+                        content: 'Luật này quy định về quan hệ dân sự, bao gồm quyền sở hữu, quyền thừa kế, hợp đồng dân sự, bồi thường thiệt hại ngoài hợp đồng. Các quyền dân sự được bảo vệ bởi pháp luật và không ai được xâm phạm.',
+                        type: 'Luật',
+                        source: 'Quốc hội',
+                        date: '2015-11-24T00:00:00.000Z',
+                        keywords: ['dân sự', 'sở hữu', 'thừa kế', 'hợp đồng', 'bồi thường', 'quyền'],
+                        category: 'luat'
+                    },
+                    {
+                        id: 'doc_5',
+                        title: 'Luật Hôn nhân và Gia đình 2014',
+                        content: 'Luật này quy định về hôn nhân và gia đình; chuẩn mực pháp lý cho cách ứng xử giữa các thành viên gia đình; quyền, nghĩa vụ của vợ, chồng, cha, mẹ, con; trách nhiệm của cá nhân, gia đình, nhà nước và xã hội trong việc xây dựng, củng cố chế độ hôn nhân và gia đình.',
+                        type: 'Luật',
+                        source: 'Quốc hội',
+                        date: '2014-06-19T00:00:00.000Z',
+                        keywords: ['hôn nhân', 'gia đình', 'vợ chồng', 'cha mẹ', 'con cái', 'quyền', 'nghĩa vụ'],
+                        category: 'luat'
+                    },
+                    {
+                        id: 'doc_6',
+                        title: 'Luật Hình sự 2015',
+                        content: 'Luật này quy định về tội phạm và hình phạt. Tội phạm là hành vi nguy hiểm cho xã hội được quy định trong Bộ luật Hình sự, do người có năng lực trách nhiệm hình sự thực hiện một cách cố ý hoặc vô ý, xâm phạm độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ của Tổ quốc.',
+                        type: 'Luật',
+                        source: 'Quốc hội',
+                        date: '2015-11-27T00:00:00.000Z',
+                        keywords: ['hình sự', 'tội phạm', 'hình phạt', 'trách nhiệm', 'xâm phạm'],
+                        category: 'luat'
+                    },
+                    {
+                        id: 'doc_7',
+                        title: 'Luật Tố tụng hình sự 2015',
+                        content: 'Luật này quy định về trình tự, thủ tục tiến hành các hoạt động khởi tố, điều tra, truy tố, xét xử và thi hành án hình sự; quyền và nghĩa vụ của những người tham gia tố tụng; trách nhiệm của cơ quan, người có thẩm quyền tiến hành tố tụng.',
+                        type: 'Luật',
+                        source: 'Quốc hội',
+                        date: '2015-11-27T00:00:00.000Z',
+                        keywords: ['tố tụng', 'hình sự', 'khởi tố', 'điều tra', 'truy tố', 'xét xử'],
+                        category: 'luat'
+                    },
+                    {
+                        id: 'doc_8',
+                        title: 'Luật Tố tụng dân sự 2015',
+                        content: 'Luật này quy định về trình tự, thủ tục giải quyết các vụ án dân sự, hôn nhân và gia đình, kinh doanh, thương mại, lao động và các vụ việc dân sự khác; quyền và nghĩa vụ của những người tham gia tố tụng dân sự.',
+                        type: 'Luật',
+                        source: 'Quốc hội',
+                        date: '2015-11-25T00:00:00.000Z',
+                        keywords: ['tố tụng', 'dân sự', 'giải quyết', 'vụ án', 'hôn nhân', 'kinh doanh'],
+                        category: 'luat'
+                    },
+                    {
+                        id: 'doc_9',
+                        title: 'Luật Đất đai 2013',
+                        content: 'Luật này quy định về quản lý, sử dụng đất đai; quyền và nghĩa vụ của người sử dụng đất; trách nhiệm của Nhà nước trong việc quản lý đất đai. Đất đai thuộc sở hữu toàn dân do Nhà nước đại diện chủ sở hữu và thống nhất quản lý.',
+                        type: 'Luật',
+                        source: 'Quốc hội',
+                        date: '2013-11-29T00:00:00.000Z',
+                        keywords: ['đất đai', 'quản lý', 'sử dụng', 'quyền', 'nghĩa vụ', 'sở hữu'],
+                        category: 'luat'
+                    },
+                    {
+                        id: 'doc_10',
+                        title: 'Luật Nhà ở 2014',
+                        content: 'Luật này quy định về quyền sở hữu nhà ở, quyền và nghĩa vụ của chủ sở hữu nhà ở, người sử dụng nhà ở; quản lý nhà ở; phát triển nhà ở; giao dịch về nhà ở; bảo trì, sửa chữa nhà ở.',
+                        type: 'Luật',
+                        source: 'Quốc hội',
+                        date: '2014-11-25T00:00:00.000Z',
+                        keywords: ['nhà ở', 'sở hữu', 'quyền', 'nghĩa vụ', 'quản lý', 'phát triển'],
+                        category: 'luat'
+                    },
+                    {
+                        id: 'doc_11',
+                        title: 'Luật An ninh mạng 2018',
+                        content: 'Luật này quy định về hoạt động bảo vệ an ninh mạng; biện pháp bảo vệ an ninh mạng; trách nhiệm của cơ quan, tổ chức, cá nhân trong bảo vệ an ninh mạng. Bảo vệ an ninh mạng là trách nhiệm của toàn dân.',
+                        type: 'Luật',
+                        source: 'Quốc hội',
+                        date: '2018-06-12T00:00:00.000Z',
+                        keywords: ['an ninh', 'mạng', 'bảo vệ', 'trách nhiệm', 'toàn dân'],
+                        category: 'luat'
+                    },
+                    {
+                        id: 'doc_12',
+                        title: 'Luật Bảo hiểm xã hội 2014',
+                        content: 'Luật này quy định về chế độ, chính sách bảo hiểm xã hội; quyền và nghĩa vụ của người lao động, người sử dụng lao động đối với bảo hiểm xã hội; quyền và nghĩa vụ của cơ quan, tổ chức, cá nhân có liên quan đến bảo hiểm xã hội.',
+                        type: 'Luật',
+                        source: 'Quốc hội',
+                        date: '2014-11-20T00:00:00.000Z',
+                        keywords: ['bảo hiểm', 'xã hội', 'chế độ', 'chính sách', 'quyền', 'nghĩa vụ'],
+                        category: 'luat'
+                    },
+                    
+                    // NGHỊ ĐỊNH
+                    {
+                        id: 'doc_13',
+                        title: 'Nghị định 15/2020/NĐ-CP về chống dịch COVID-19',
+                        content: 'Nghị định quy định về các biện pháp phòng, chống dịch bệnh COVID-19 và hỗ trợ doanh nghiệp, người dân gặp khó khăn do dịch bệnh. Các biện pháp bao gồm giãn cách xã hội, đóng cửa các cơ sở kinh doanh không thiết yếu, hỗ trợ tài chính cho doanh nghiệp và người lao động.',
+                        type: 'Nghị định',
+                        source: 'Chính phủ',
+                        date: '2020-04-03T00:00:00.000Z',
+                        keywords: ['covid-19', 'dịch bệnh', 'hỗ trợ', 'doanh nghiệp', 'giãn cách', 'tài chính'],
+                        category: 'nghi-dinh'
+                    },
+                    {
+                        id: 'doc_14',
+                        title: 'Nghị định 100/2019/NĐ-CP về xử phạt vi phạm giao thông',
+                        content: 'Nghị định quy định về xử phạt vi phạm hành chính trong lĩnh vực giao thông đường bộ, đường sắt, đường thủy nội địa, hàng hải, hàng không. Các mức phạt được quy định cụ thể cho từng loại vi phạm.',
+                        type: 'Nghị định',
+                        source: 'Chính phủ',
+                        date: '2019-12-30T00:00:00.000Z',
+                        keywords: ['giao thông', 'xử phạt', 'vi phạm', 'hành chính', 'đường bộ', 'đường sắt'],
+                        category: 'nghi-dinh'
+                    },
+                    {
+                        id: 'doc_15',
+                        title: 'Nghị định 15/2021/NĐ-CP về quản lý thuế',
+                        content: 'Nghị định quy định về quản lý thuế, bao gồm đăng ký thuế, khai thuế, nộp thuế, quyết toán thuế, hoàn thuế, miễn thuế, giảm thuế, gia hạn nộp thuế, không thu thuế; quyền và nghĩa vụ của người nộp thuế.',
+                        type: 'Nghị định',
+                        source: 'Chính phủ',
+                        date: '2021-03-03T00:00:00.000Z',
+                        keywords: ['thuế', 'quản lý', 'đăng ký', 'khai thuế', 'nộp thuế', 'hoàn thuế'],
+                        category: 'nghi-dinh'
+                    },
+                    {
+                        id: 'doc_16',
+                        title: 'Nghị định 15/2018/NĐ-CP về bảo vệ dữ liệu cá nhân',
+                        content: 'Nghị định quy định về bảo vệ dữ liệu cá nhân, quyền riêng tư của cá nhân trong hoạt động xử lý dữ liệu cá nhân; trách nhiệm của cơ quan, tổ chức, cá nhân trong việc bảo vệ dữ liệu cá nhân.',
+                        type: 'Nghị định',
+                        source: 'Chính phủ',
+                        date: '2018-02-02T00:00:00.000Z',
+                        keywords: ['dữ liệu', 'cá nhân', 'bảo vệ', 'quyền riêng tư', 'xử lý'],
+                        category: 'nghi-dinh'
+                    },
+                    
+                    // NGHỊ QUYẾT
+                    {
+                        id: 'doc_17',
+                        title: 'Nghị quyết 01/2021/NQ-CP về chương trình phục hồi kinh tế',
+                        content: 'Nghị quyết về chương trình phục hồi và phát triển kinh tế - xã hội, bảo đảm an sinh xã hội, ứng phó với biến đổi khí hậu, phòng, chống thiên tai, dịch bệnh, bảo đảm quốc phòng, an ninh.',
+                        type: 'Nghị quyết',
+                        source: 'Chính phủ',
+                        date: '2021-01-01T00:00:00.000Z',
+                        keywords: ['phục hồi', 'kinh tế', 'xã hội', 'an sinh', 'biến đổi khí hậu'],
+                        category: 'nghi-quyet'
+                    },
+                    {
+                        id: 'doc_18',
+                        title: 'Nghị quyết 128/2021/NQ-CP về thích ứng an toàn với COVID-19',
+                        content: 'Nghị quyết về thích ứng an toàn, linh hoạt, kiểm soát hiệu quả dịch COVID-19, tạo điều kiện thuận lợi cho phục hồi và phát triển kinh tế - xã hội.',
+                        type: 'Nghị quyết',
+                        source: 'Chính phủ',
+                        date: '2021-10-11T00:00:00.000Z',
+                        keywords: ['thích ứng', 'an toàn', 'covid-19', 'linh hoạt', 'kiểm soát'],
+                        category: 'nghi-quyet'
+                    },
+                    
+                    // THÔNG TƯ
+                    {
+                        id: 'doc_19',
+                        title: 'Thông tư 78/2021/TT-BTC về hướng dẫn thuế',
+                        content: 'Thông tư hướng dẫn thực hiện một số điều của Luật Quản lý thuế và các nghị định liên quan về quản lý thuế, bao gồm thủ tục đăng ký thuế, khai thuế, nộp thuế.',
+                        type: 'Thông tư',
+                        source: 'Bộ Tài chính',
+                        date: '2021-09-15T00:00:00.000Z',
+                        keywords: ['thuế', 'hướng dẫn', 'quản lý', 'đăng ký', 'khai thuế'],
+                        category: 'thong-tu'
+                    },
+                    {
+                        id: 'doc_20',
+                        title: 'Thông tư 15/2021/TT-BLĐTBXH về lao động',
+                        content: 'Thông tư hướng dẫn thực hiện một số điều của Bộ luật Lao động về thời giờ làm việc, thời giờ nghỉ ngơi, tiền lương, an toàn lao động.',
+                        type: 'Thông tư',
+                        source: 'Bộ Lao động - Thương binh và Xã hội',
+                        date: '2021-02-15T00:00:00.000Z',
+                        keywords: ['lao động', 'thời giờ', 'nghỉ ngơi', 'tiền lương', 'an toàn'],
+                        category: 'thong-tu'
+                    },
+                    
+                    // QUYẾT ĐỊNH
+                    {
+                        id: 'doc_21',
+                        title: 'Quyết định 15/2020/QĐ-TTg về hỗ trợ doanh nghiệp',
+                        content: 'Quyết định về một số chính sách hỗ trợ doanh nghiệp, hợp tác xã, hộ kinh doanh gặp khó khăn do đại dịch COVID-19, bao gồm hỗ trợ tài chính, giảm thuế, gia hạn nộp thuế.',
+                        type: 'Quyết định',
+                        source: 'Thủ tướng Chính phủ',
+                        date: '2020-04-24T00:00:00.000Z',
+                        keywords: ['hỗ trợ', 'doanh nghiệp', 'covid-19', 'tài chính', 'giảm thuế'],
+                        category: 'quyet-dinh'
+                    },
+                    {
+                        id: 'doc_22',
+                        title: 'Quyết định 15/2021/QĐ-TTg về chuyển đổi số',
+                        content: 'Quyết định về chương trình chuyển đổi số quốc gia đến năm 2025, định hướng đến năm 2030, bao gồm các mục tiêu, nhiệm vụ, giải pháp chuyển đổi số.',
+                        type: 'Quyết định',
+                        source: 'Thủ tướng Chính phủ',
+                        date: '2021-06-03T00:00:00.000Z',
+                        keywords: ['chuyển đổi số', 'quốc gia', 'mục tiêu', 'nhiệm vụ', 'giải pháp'],
+                        category: 'quyet-dinh'
+                    },
+                    
+                    // CHỈ THỊ
+                    {
+                        id: 'doc_23',
+                        title: 'Chỉ thị 15/CT-TTg về phòng chống COVID-19',
+                        content: 'Chỉ thị về việc thực hiện các biện pháp cấp bách phòng, chống dịch COVID-19, bao gồm giãn cách xã hội, đóng cửa các cơ sở không thiết yếu, tăng cường kiểm tra, giám sát.',
+                        type: 'Chỉ thị',
+                        source: 'Thủ tướng Chính phủ',
+                        date: '2020-03-27T00:00:00.000Z',
+                        keywords: ['covid-19', 'phòng chống', 'giãn cách', 'kiểm tra', 'giám sát'],
+                        category: 'chi-thi'
+                    },
+                    {
+                        id: 'doc_24',
+                        title: 'Chỉ thị 16/CT-TTg về chuyển đổi số',
+                        content: 'Chỉ thị về việc tăng cường năng lực tiếp cận cuộc Cách mạng công nghiệp lần thứ tư, thúc đẩy chuyển đổi số quốc gia.',
+                        type: 'Chỉ thị',
+                        source: 'Thủ tướng Chính phủ',
+                        date: '2020-05-04T00:00:00.000Z',
+                        keywords: ['cách mạng', 'công nghiệp', 'chuyển đổi số', 'năng lực', 'tiếp cận'],
+                        category: 'chi-thi'
+                    },
+                    
+                    // HỢP ĐỒNG MẪU
+                    {
+                        id: 'doc_25',
+                        title: 'Hợp đồng lao động mẫu',
+                        content: 'Hợp đồng lao động là sự thỏa thuận giữa người lao động và người sử dụng lao động về việc làm có trả công, điều kiện lao động, quyền và nghĩa vụ của mỗi bên trong quan hệ lao động.',
+                        type: 'Hợp đồng mẫu',
+                        source: 'Bộ Lao động - Thương binh và Xã hội',
+                        date: '2021-01-01T00:00:00.000Z',
+                        keywords: ['hợp đồng', 'lao động', 'thỏa thuận', 'việc làm', 'trả công'],
+                        category: 'hop-dong'
+                    },
+                    {
+                        id: 'doc_26',
+                        title: 'Hợp đồng mua bán nhà ở',
+                        content: 'Hợp đồng mua bán nhà ở là sự thỏa thuận giữa các bên, theo đó bên bán chuyển quyền sở hữu nhà ở cho bên mua và bên mua trả tiền cho bên bán.',
+                        type: 'Hợp đồng mẫu',
+                        source: 'Bộ Xây dựng',
+                        date: '2021-01-01T00:00:00.000Z',
+                        keywords: ['hợp đồng', 'mua bán', 'nhà ở', 'sở hữu', 'chuyển quyền'],
+                        category: 'hop-dong'
+                    },
+                    {
+                        id: 'doc_27',
+                        title: 'Hợp đồng thuê nhà',
+                        content: 'Hợp đồng thuê nhà là sự thỏa thuận giữa bên cho thuê và bên thuê, theo đó bên cho thuê giao nhà cho bên thuê sử dụng trong một thời hạn nhất định và bên thuê trả tiền thuê nhà.',
+                        type: 'Hợp đồng mẫu',
+                        source: 'Bộ Xây dựng',
+                        date: '2021-01-01T00:00:00.000Z',
+                        keywords: ['hợp đồng', 'thuê nhà', 'thỏa thuận', 'sử dụng', 'tiền thuê'],
+                        category: 'hop-dong'
+                    },
+                    {
+                        id: 'doc_28',
+                        title: 'Hợp đồng cung cấp dịch vụ',
+                        content: 'Hợp đồng cung cấp dịch vụ là sự thỏa thuận giữa các bên, theo đó bên cung cấp dịch vụ thực hiện công việc cho bên sử dụng dịch vụ và bên sử dụng dịch vụ trả tiền công.',
+                        type: 'Hợp đồng mẫu',
+                        source: 'Bộ Tư pháp',
+                        date: '2021-01-01T00:00:00.000Z',
+                        keywords: ['hợp đồng', 'dịch vụ', 'cung cấp', 'thỏa thuận', 'tiền công'],
+                        category: 'hop-dong'
+                    },
+                    {
+                        id: 'doc_29',
+                        title: 'Hợp đồng vay tiền',
+                        content: 'Hợp đồng vay tiền là sự thỏa thuận giữa các bên, theo đó bên cho vay giao tiền cho bên vay và bên vay có nghĩa vụ hoàn trả tiền gốc và lãi cho bên cho vay.',
+                        type: 'Hợp đồng mẫu',
+                        source: 'Bộ Tư pháp',
+                        date: '2021-01-01T00:00:00.000Z',
+                        keywords: ['hợp đồng', 'vay tiền', 'thỏa thuận', 'hoàn trả', 'lãi'],
+                        category: 'hop-dong'
+                    },
+                    {
+                        id: 'doc_30',
+                        title: 'Hợp đồng ủy quyền',
+                        content: 'Hợp đồng ủy quyền là sự thỏa thuận giữa các bên, theo đó bên được ủy quyền có nghĩa vụ thực hiện công việc nhân danh bên ủy quyền và bên ủy quyền chỉ phải trả thù lao nếu có thỏa thuận hoặc pháp luật có quy định.',
+                        type: 'Hợp đồng mẫu',
+                        source: 'Bộ Tư pháp',
+                        date: '2021-01-01T00:00:00.000Z',
+                        keywords: ['hợp đồng', 'ủy quyền', 'thỏa thuận', 'thực hiện', 'thù lao'],
+                        category: 'hop-dong'
+                    }
+                ];
+            }
+            
+            toggleRecording() {
+                this.isRecording = !this.isRecording;
+                this.recordBtn.classList.toggle('active', this.isRecording);
+                
+                if (this.isRecording) {
+                    this.recordBtn.innerHTML = '<i data-lucide="mic-off" class="w-5 h-5"></i>';
+                    // Start recording logic here
+                } else {
+                    this.recordBtn.innerHTML = '<i data-lucide="mic" class="w-5 h-5"></i>';
+                    // Stop recording logic here
+                }
+            }
+            
+            filterSuggestions(category) {
+                this.selectedCategory = category;
+                const suggestions = this.suggestionsList.querySelectorAll('.suggestion-item');
+                
+                suggestions.forEach(suggestion => {
+                    const suggestionCategory = suggestion.dataset.category;
+                    if (category === 'all' || suggestionCategory === category) {
+                        suggestion.style.display = 'block';
+                    } else {
+                        suggestion.style.display = 'none';
+                    }
+                });
+            }
+            
+            copyMessage(messageId) {
+                const message = this.messages.find(m => m.id === messageId);
+                if (message) {
+                    navigator.clipboard.writeText(message.content);
+                    alert('Đã sao chép tin nhắn');
+                }
+            }
+            
+            shareMessage(messageId) {
+                const message = this.messages.find(m => m.id === messageId);
+                if (message) {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'ViLaw Chat',
+                            text: message.content,
+                            url: window.location.href
+                        });
+                    } else {
+                        navigator.clipboard.writeText(message.content);
+                        alert('Đã sao chép để chia sẻ');
+                    }
+                }
+            }
+            
+            scrollToBottom() {
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+            }
+        }
+        
+        // Initialize chat app
+        let chatApp;
+        
+        // Simple initialization
+        function initChat() {
+            if (!chatApp) {
+                console.log('Initializing ChatApp...');
+                chatApp = new ChatApp();
+                console.log('ChatApp initialized:', chatApp);
+            }
+        }
+        
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initChat);
+        } else {
+            initChat();
+        }
+        
+        // Also try to initialize after a short delay
+        setTimeout(initChat, 100);
+        
+        // Global function for manual testing
+        window.testChat = function() {
+            console.log('Testing chat functionality...');
+            if (chatApp) {
+                console.log('ChatApp is initialized');
+                chatApp.addMessage('user', 'Test message');
+            } else {
+                console.log('ChatApp not initialized, trying to initialize...');
+                chatApp = new ChatApp();
+            }
+        };
+        
+        // Debug function
+        window.debugChat = function() {
+            console.log('ChatApp status:', chatApp);
+            console.log('Messages container:', document.getElementById('messagesContainer'));
+            console.log('Message input:', document.getElementById('messageInput'));
+            console.log('Send button:', document.getElementById('sendBtn'));
+        };
+        
+        // Force send message function
+        window.forceSend = function(message) {
+            if (chatApp) {
+                chatApp.addMessage('user', message);
+                chatApp.generateAIResponse(message);
+            } else {
+                console.log('ChatApp not initialized');
+            }
+        };
+        
+        // Manual send function
+        window.manualSend = function() {
+            const input = document.getElementById('messageInput');
+            if (input && chatApp) {
+                const content = input.value.trim();
+                if (content) {
+                    chatApp.sendMessage();
+                }
+            }
+        };
+    </script>
+</body>
+</html>

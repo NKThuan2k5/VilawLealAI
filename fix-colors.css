@@ -1,0 +1,165 @@
+/* Fix colors for better readability */
+body {
+    color: #1e293b !important;
+}
+
+.hero-title {
+    color: #1e293b !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.hero-subtitle {
+    color: #374151 !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+.hero-description {
+    color: #4b5563 !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+/* Header text */
+.header-content {
+    color: #1e293b !important;
+}
+
+.nav-link {
+    color: #374151 !important;
+}
+
+.nav-link:hover {
+    color: var(--primary) !important;
+}
+
+/* Hero section text */
+.hero-content h1 {
+    color: #1e293b !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.hero-content p {
+    color: #4b5563 !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+/* Stats section */
+.stats-title {
+    color: #1e293b !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.stat-number {
+    color: var(--primary) !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.stat-label {
+    color: #4b5563 !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+/* Features section */
+.features-title {
+    color: #1e293b !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.feature-card h3 {
+    color: #1e293b !important;
+}
+
+.feature-card p {
+    color: #4b5563 !important;
+}
+
+/* Test system section */
+.test-title {
+    color: #1e293b !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.test-card h3 {
+    color: #1e293b !important;
+}
+
+.test-card p {
+    color: #4b5563 !important;
+}
+
+/* Packages section */
+.packages-title {
+    color: #1e293b !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.package-card h3 {
+    color: #1e293b !important;
+}
+
+.package-card p {
+    color: #4b5563 !important;
+}
+
+.package-price {
+    color: var(--primary) !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+/* Footer */
+.footer-content {
+    color: #1e293b !important;
+}
+
+.footer-content h3 {
+    color: #1e293b !important;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.footer-content p {
+    color: #4b5563 !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+.footer-content a {
+    color: #374151 !important;
+}
+
+.footer-content a:hover {
+    color: var(--primary) !important;
+}
+
+/* Overlay for better text readability */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Card backgrounds with better contrast */
+.feature-card,
+.test-card,
+.package-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Button improvements */
+.btn {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}

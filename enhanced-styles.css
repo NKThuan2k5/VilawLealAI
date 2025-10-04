@@ -1,0 +1,384 @@
+/* Enhanced Styles for ViLaw Project */
+
+/* ==================== GLOBAL ENHANCEMENTS ==================== */
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Enhanced body with better typography */
+body {
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==================== ANIMATIONS & TRANSITIONS ==================== */
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Slide up animation */
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Scale in animation */
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Pulse animation */
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Shake animation */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* ==================== ENHANCED COMPONENTS ==================== */
+
+/* Enhanced buttons */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* Enhanced cards */
+.feature-card, .package-card, .test-card {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card::before, .package-card::before, .test-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.feature-card:hover::before, .package-card:hover::before, .test-card:hover::before {
+    transform: translateX(100%);
+}
+
+/* Enhanced input fields */
+input, textarea, select {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(118, 186, 83, 0.1);
+    transform: translateY(-1px);
+}
+
+/* ==================== LOADING STATES ==================== */
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Skeleton loading */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ==================== TYPOGRAPHY ENHANCEMENTS ==================== */
+
+/* Text selection */
+::selection {
+    background: var(--primary);
+    color: white;
+}
+
+/* Enhanced headings */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+}
+
+/* Enhanced paragraphs */
+p {
+    line-height: 1.7;
+    color: #4b5563;
+}
+
+/* ==================== INTERACTIVE ELEMENTS ==================== */
+
+/* Hover effects for links */
+a {
+    position: relative;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+a:hover::after {
+    width: 100%;
+}
+
+/* Enhanced form elements */
+.form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    position: absolute;
+    top: 0.75rem;
+    left: 1rem;
+    color: #6b7280;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.form-input:focus + .form-label,
+.form-input:not(:placeholder-shown) + .form-label {
+    top: -0.5rem;
+    left: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--primary);
+    background: white;
+    padding: 0 0.25rem;
+}
+
+/* ==================== RESPONSIVE ENHANCEMENTS ==================== */
+
+/* Mobile-first approach */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .feature-grid, .packages-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .packages-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Desktop enhancements */
+@media (min-width: 1025px) {
+    .feature-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .packages-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ==================== ACCESSIBILITY ENHANCEMENTS ==================== */
+
+/* Focus indicators */
+*:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .btn {
+        border: 2px solid currentColor;
+    }
+    
+    .card {
+        border: 1px solid #000;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ==================== PERFORMANCE OPTIMIZATIONS ==================== */
+
+/* GPU acceleration for animations */
+.animated {
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+/* Optimize repaints */
+.static {
+    transform: translateZ(0);
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+
+/* Spacing utilities */
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-5 { margin-top: 1.25rem; }
+.mt-6 { margin-top: 1.5rem; }
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 0.75rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-5 { margin-bottom: 1.25rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+
+/* Text utilities */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.text-sm { font-size: 0.875rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.25rem; }
+.text-2xl { font-size: 1.5rem; }
+.text-3xl { font-size: 1.875rem; }
+
+/* Color utilities */
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--accent); }
+.text-muted { color: #6b7280; }
+.text-success { color: #10b981; }
+.text-warning { color: #f59e0b; }
+.text-error { color: #ef4444; }
+
+/* Display utilities */
+.hidden { display: none; }
+.block { display: block; }
+.inline { display: inline; }
+.inline-block { display: inline-block; }
+.flex { display: flex; }
+.grid { display: grid; }
+
+/* Flexbox utilities */
+.flex-col { flex-direction: column; }
+.flex-row { flex-direction: row; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+
+/* Grid utilities */
+.grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* Gap utilities */
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.gap-5 { gap: 1.25rem; }
+.gap-6 { gap: 1.5rem; }
+
+/* ==================== DARK MODE SUPPORT ==================== */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --text-primary: #ffffff;
+        --text-secondary: #a0a0a0;
+    }
+    
+    body {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+    }
+    
+    .card {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+    }
+    
+    .btn-secondary {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 1px solid #404040;
+    }
+}
